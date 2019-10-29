@@ -1,3 +1,42 @@
+<mat-sidenav-container>
+  <mat-sidenav-content>
+
+              <mat-form-field class="example-chip-list">
+                <mat-chip-list #chipList aria-label="userFiName selection">
+                  <mat-chip
+                    *ngFor="let userFiName of userFiNames"
+                    [selectable]="selectable"
+                    [removable]="removable"
+                    (removed)="remove(userFiName)">
+                    {{userFiName}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                  <input
+                    placeholder="New userFiName..."
+                    #userFiNameInput
+                    [formControl]="userFiNameCtrl"
+                    [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="add($event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                  <mat-option *ngFor="let userFiName of filtereduserFiNames | async" [value]="userFiName">
+                    {{userFiName}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
+
+      <!-- Submit -->
+      <div class="button-wrapper">
+        <button (click)="searchUser($event)" mat-flat-button color="primary">Search Users</button>
+      </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<div>
 <table matSort (matSortChange)="sortData($event)">
     <tr>
       <th mat-sort-header="firstName">First Name</th>
@@ -15,3 +54,4 @@
       <td><button mat-raised-button (click)="removeUser(user.userId)">Remove</button></td>
     </tr>
   </table>
+</div>

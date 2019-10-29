@@ -16,7 +16,6 @@ import { ProjectsComponent } from './projects/projects.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { UsersComponent } from './users/users.component';
 import { ViewTaskComponent } from './view-task/view-task.component';
-import { ViewUsersComponent } from './view-users/view-users.component';
 import { ListUsersComponent } from './list-users/list-users.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 
@@ -28,7 +27,6 @@ import { EditUserComponent } from './edit-user/edit-user.component';
     TasksComponent,
     UsersComponent,
     ViewTaskComponent,
-    ViewUsersComponent,
     ListUsersComponent,
     EditUserComponent 
   ],

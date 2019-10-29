@@ -1,47 +1,120 @@
-import {Component, OnInit,Inject} from '@angular/core';
+import {Component, OnInit,ElementRef, ViewChild} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {User} from '../model/user';
 import {UsersService} from "../users.service";
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { FormArray,FormGroup, FormControl,  FormBuilder, Validators } from "@angular/forms";
 import  {EditUserComponent} from '../edit-user/edit-user.component';
 import { UsersComponent } from '../users/users.component';
 
- 
 
 @Component({
   selector: 'app-list-users',
   templateUrl: './list-users.component.html',
   styleUrls: ['./list-users.component.css']
 })
+
 export class ListUsersComponent implements OnInit{ 
   user=new User();
   getByUser=new User();
   panelOpenState = false;
   users: User[];
- 
+  searchAllUser:User[];
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  userFiNameCtrl = new FormControl();
+  filtereduserFiNames: Observable<string[]>;
+  userFiNames: string[] = [];
+  alluserFiNames: string[] = [];
+  
+  @ViewChild('userFiNameInput', {static: false}) userFiNameInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
+
+  myUserSearchForm: FormGroup;
   
   
-  submitUpdateForm(emp :any):void
-  {
-    console.log("submitUpdateForm");
-    console.log(emp);
+  
+  
+  
+   
+  constructor(private usersService:UsersService,public fb: FormBuilder,public dialog: MatDialog) {
+
+    this.filtereduserFiNames = this.userFiNameCtrl.valueChanges.pipe(
+      startWith(null),
+      map((userFiName: string | null) => userFiName ? this._filter(userFiName) : this.alluserFiNames.slice()));
+
+   }
+  
+   add(event: MatChipInputEvent): void {
+    // Add userFiName only when MatAutocomplete is not open
+    // To make sure this does not conflict with OptionSelected Event
+    if (!this.matAutocomplete.isOpen) {
+      const input = event.input;
+      const value = event.value;
+  
+      // Add our userFiName
+      if ((value || '').trim()) {
+        this.userFiNames.push(value.trim());
+      }
+  
+      // Reset the input value
+      if (input) {
+        input.value = '';
+      }
+  
+      this.userFiNameCtrl.setValue(null);
+    }
   }
-  constructor(private usersService:UsersService,public fb: FormBuilder,public dialog: MatDialog) { }
   
-  ngOnInit() {
-    this.getUsers();     
+  remove(userFiName: string): void {
+    const index = this.userFiNames.indexOf(userFiName);
+  
+    if (index >= 0) {
+      this.userFiNames.splice(index, 1);
+    }
+  }
+  
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.userFiNames.push(event.option.viewValue);
+    this.userFiNameInput.nativeElement.value = '';
+    this.userFiNameCtrl.setValue(null);
+  }
+  
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+  
+    return this.alluserFiNames.filter(userFiName => userFiName.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  
-  
+  ngOnInit() {
+    this.getUsers();   
+    
+  }
+
+
   
   getUsers(): void {
     console.log('fetched user');
-    this.usersService.getUsers().subscribe(users => this.users = users);
+    this.usersService.getUsers().subscribe(users => {this.users = users;
+      this.searchAllUser=users;
+      this.searchAllUser.forEach(user=>{ 
+        this.alluserFiNames.push(user.firstName)
+      });
+    });
     
+  }
+  searchUser():void{
+    console.log('fetched user');
+    this.users=this.searchAllUser;
+    this.usersService.searchUser(this.userFiNames).subscribe(users => this.users = users);
   }
   getUserById(userId : any): void {
     
@@ -95,6 +168,9 @@ export class ListUsersComponent implements OnInit{
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
+
+
+
 
 
 

@@ -4,7 +4,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import {User} from '../model/user';
 import {UsersService} from "../users.service";
-
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-users',
@@ -20,7 +20,7 @@ user=new User();
   addUserForm: FormGroup;
  
 
-  constructor(private usersService:UsersService,public fb: FormBuilder) {}
+  constructor(private usersService:UsersService,public fb: FormBuilder,private router: Router) {}
 
   ngOnInit(): void {
     this.reactiveForm()
@@ -52,6 +52,11 @@ user=new User();
     console.log(JSON.stringify(this.user));
     this.usersService.addUser(this.user).subscribe(user => {
       console.log(JSON.stringify(user));
+
+      this.router.navigateByUrl('/tasks', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['/users']);
+    });
+
       });
      
   }

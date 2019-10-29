@@ -19,6 +19,8 @@ private users:User[];
 
  private userByidGetUrl = 'users/user';
 
+ private searchUserUrl='users/searchusers';
+
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'})
   };
@@ -53,6 +55,20 @@ private users:User[];
     return this.http.get<User>(url).pipe(
       tap((user: User) => this.log(`fetched User id=${userId}`+JSON.stringify(user))),
       catchError(this.handleError<User>(`getUser id=${userId}`))
+    );
+  }
+
+  updateUser (user: User): Observable<any> {
+    return this.http.put(this.getBaseUrl()+this.userByidGetUrl, user, this.httpOptions).pipe(
+      tap(_ => this.log(`updated User id=${user.userId}`)),
+      catchError(this.handleError<any>('updateUser'))
+    );
+  }
+
+  searchUser (names: String[]): Observable<any> {
+    return this.http.post<User[]>(this.getBaseUrl()+this.searchUserUrl, names, this.httpOptions).pipe(
+      tap((users: User[]) => this.log('fetched Useres'+JSON.stringify(users))),
+      catchError(this.handleError<User[]>('getUsers:', []))
     );
   }
 

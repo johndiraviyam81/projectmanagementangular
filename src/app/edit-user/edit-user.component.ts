@@ -3,6 +3,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { User } from '../model/user';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import {UsersService} from "../users.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-edit-user',
@@ -16,10 +17,11 @@ export class EditUserComponent {
   removable = true;
   addOnBlur = true;
   editUserForm: FormGroup;
+  
 
   constructor(
     public dialogRef: MatDialogRef<EditUserComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: User,private usersService:UsersService,public fb: FormBuilder) {
+    @Inject(MAT_DIALOG_DATA) public data: User,private usersService:UsersService,public fb: FormBuilder,private router: Router) {
       
       this.editUserForm = this.fb.group({
         userId: [''],
@@ -42,15 +44,26 @@ public errorHandling = (control: string, error: string) => {
 }
 
 modifyUserForm() {
+  this.user=this.data;
   this.user.userId=this.editUserForm.value.userId;
   this.user.firstName=this.editUserForm.value.firstName;
   this.user.lastName=this.editUserForm.value.lastName;
   this.user.employeeId=this.editUserForm.value.employeeId;
   console.log(this.editUserForm.value);
   console.log(JSON.stringify(this.user));
-  /*this.usersService.addUser(this.user).subscribe(user => {
+  this.usersService.updateUser(this.user).subscribe(user => {
     console.log(JSON.stringify(user));
-    });*/
+ 
+    //this.router.navigate(["/users", {relativeTo: this.router, skipLocationChange: true}]);
+    this.router.navigateByUrl('/tasks', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/users']);
+  });
+
+    this.dialogRef.close();
+
+  
+    });
+ 
    
 }
   onNoClick(): void {
