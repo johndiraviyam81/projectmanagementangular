@@ -1,0 +1,49 @@
+<!-- Toolbar -->
+
+  
+  <!-- wrapper -->
+  <mat-sidenav-container>
+    <mat-sidenav-content>
+      <form [formGroup]="addUserForm" (ngSubmit)="submitUserForm()" novalidate>
+        <!-- First Name -->
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="First Name" formControlName="firstName">
+          <!-- error -->
+          <mat-error *ngIf="errorHandling('firstName', 'required')">
+            You must provide a<strong>first name</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Last Name -->
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Last Name" formControlName="lastName">
+            <!-- error -->
+            <mat-error *ngIf="errorHandling('lastName', 'required')">
+              You must provide a<strong>last name</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Employee ID -->
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Employee ID" formControlName="employeeId">
+            <!-- error -->
+            <mat-error *ngIf="errorHandling('employeeId', 'required')">
+              You must provide a<strong>Employee ID</strong>
+            </mat-error>
+          </mat-form-field>
+  
+        <!-- Submit -->
+        <div class="button-wrapper">
+          <button mat-flat-button color="primary">Submit</button>
+        </div>
+  
+      </form>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+  <p> </p>
+  <p> </p>
+  <p> </p>
+    <app-list-users></app-list-users>
+
+  

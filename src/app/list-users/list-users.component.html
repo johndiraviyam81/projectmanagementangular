@@ -1,0 +1,17 @@
+<table matSort (matSortChange)="sortData($event)">
+    <tr>
+      <th mat-sort-header="firstName">First Name</th>
+      <th mat-sort-header="lastName">Last Name</th>
+      <th mat-sort-header="employeeId">Employee ID</th>
+      <th  >Edit</th>
+      <th  >Remove</th>
+    </tr>
+  
+    <tr *ngFor="let user of users">
+      <td>{{user.firstName}}</td>
+      <td>{{user.lastName}}</td>
+      <td>{{user.employeeId}}</td>
+      <td><button mat-raised-button (click)="editUser(user.userId)">Edit</button></td>
+      <td><button mat-raised-button (click)="removeUser(user.userId)">Remove</button></td>
+    </tr>
+  </table>

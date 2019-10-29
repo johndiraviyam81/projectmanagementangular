@@ -1,0 +1,32 @@
+<h1 mat-dialog-title>Edit user :{{data.firstName}} </h1>
+  <!-- wrapper -->
+  <mat-sidenav-container>
+        <mat-sidenav-content>
+<form [formGroup]="editUserForm" (ngSubmit)="modifyUserForm()" novalidate>
+        <!-- First Name -->
+        <input  type="hidden" formControlName="userId"  >
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="First Name" formControlName="firstName"  >
+          
+        </mat-form-field>
+
+        <!-- Last Name -->
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Last Name" formControlName="lastName"  >
+            
+          </mat-form-field>
+
+          <!-- Employee ID -->
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Employee ID" formControlName="employeeId" >
+            
+          </mat-form-field>
+  
+        <!-- Submit -->
+        <div class="button-wrapper">
+          <button mat-flat-button color="primary">Submit</button>
+        </div>
+  
+      </form>
+    </mat-sidenav-content>
+</mat-sidenav-container>
