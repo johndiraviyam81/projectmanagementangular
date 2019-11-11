@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { User } from '../model/user';
+import { User } from '../../model/user';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import {UsersService} from "../users.service";
+import {UsersService} from "../../users.service";
 import {Router} from "@angular/router";
 
 @Component({

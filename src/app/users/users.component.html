@@ -5,6 +5,9 @@
   <mat-sidenav-container>
     <mat-sidenav-content>
       <form [formGroup]="addUserForm" (ngSubmit)="submitUserForm()" novalidate>
+        
+                                     
+        <section class="example-section" >
         <!-- First Name -->
         <mat-form-field class="example-full-width">
           <input matInput placeholder="First Name" formControlName="firstName">
@@ -13,7 +16,8 @@
             You must provide a<strong>first name</strong>
           </mat-error>
         </mat-form-field>
-
+      </section>
+      <section class="example-section" >  
         <!-- Last Name -->
         <mat-form-field class="example-full-width">
             <input matInput placeholder="Last Name" formControlName="lastName">
@@ -22,7 +26,8 @@
               You must provide a<strong>last name</strong>
             </mat-error>
           </mat-form-field>
-
+        </section>
+        <section class="example-section" > 
           <!-- Employee ID -->
         <mat-form-field class="example-full-width">
             <input matInput placeholder="Employee ID" formControlName="employeeId">
@@ -31,12 +36,13 @@
               You must provide a<strong>Employee ID</strong>
             </mat-error>
           </mat-form-field>
-  
+        </section>
+        <section class="example-section" > 
         <!-- Submit -->
         <div class="button-wrapper">
           <button mat-flat-button color="primary">Add User</button>
         </div>
-  
+      </section>
       </form>
     </mat-sidenav-content>
   </mat-sidenav-container>

@@ -3,8 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { ProjectsComponent } from './projects/projects.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { UsersComponent } from './users/users.component';
-import { ViewTaskComponent } from './view-task/view-task.component';
-import { EditUserComponent } from './edit-user/edit-user.component';
+import { ViewTaskComponent } from './tasks/view-task/view-task.component';
+import { EditUserComponent } from './users/edit-user/edit-user.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/users', pathMatch: 'full' },

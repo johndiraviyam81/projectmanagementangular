@@ -15,9 +15,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { UsersComponent } from './users/users.component';
-import { ViewTaskComponent } from './view-task/view-task.component';
-import { ListUsersComponent } from './list-users/list-users.component';
-import { EditUserComponent } from './edit-user/edit-user.component';
+import { ViewTaskComponent } from './tasks/view-task/view-task.component';
+import { ListUsersComponent } from './users/list-users/list-users.component';
+import { EditUserComponent } from './users/edit-user/edit-user.component';
+import { ListProjectsComponent } from './projects/list-projects/list-projects.component';
+import { EditProjectComponent } from './projects/edit-project/edit-project.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { EditUserComponent } from './edit-user/edit-user.component';
     UsersComponent,
     ViewTaskComponent,
     ListUsersComponent,
-    EditUserComponent 
+    EditUserComponent,
+    ListProjectsComponent,
+    EditProjectComponent 
   ],
   imports: [
     BrowserModule,

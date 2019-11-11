@@ -1,7 +1,7 @@
 import {Component, OnInit,ElementRef, ViewChild} from '@angular/core';
 import {Sort} from '@angular/material/sort';
-import {User} from '../model/user';
-import {UsersService} from "../users.service";
+import {User} from '../../model/user';
+import {UsersService} from "../../users.service";
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
@@ -10,7 +10,7 @@ import {map, startWith} from 'rxjs/operators';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { FormArray,FormGroup, FormControl,  FormBuilder, Validators } from "@angular/forms";
 import  {EditUserComponent} from '../edit-user/edit-user.component';
-import { UsersComponent } from '../users/users.component';
+
 
 
 @Component({
