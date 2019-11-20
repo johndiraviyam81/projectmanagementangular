@@ -1,0 +1,10 @@
+.mat-slider-horizontal {
+    height: 67px;
+    min-width: 458px;
+}
+
+
+mat-span{
+    bottom:30px;
+    color:white !important;
+}

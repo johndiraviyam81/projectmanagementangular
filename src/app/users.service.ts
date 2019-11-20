@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { User } from './model/user';
+import {environment} from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +14,7 @@ export class UsersService {
 
 
 private users:User[];
- private userAddUrl = 'users/add';  // URL to web api
 
- private userGetUrl = 'users/allusers';
-
- private userByidGetUrl = 'users/user';
-
- private searchUserUrl='users/searchusers';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'})
@@ -28,14 +23,12 @@ private users:User[];
    
 
   constructor(private http: HttpClient) { }
-  getBaseUrl() {  
-    return 'http://localhost:8090/';  
- }
+ 
   /////// Save methods //////////
 
   /** POST: add a new User to the server */
   addUser (User: User): Observable<User> {
-    return this.http.post<User>(this.getBaseUrl()+this.userAddUrl, User, this.httpOptions).pipe(
+    return this.http.post<User>(environment.userAddUrl, User, this.httpOptions).pipe(
       tap((newUser: User) => this.log(`added User w/ id=${newUser.firstName}`)),
       catchError(this.handleError<User>('addUser'))
     );
@@ -43,7 +36,7 @@ private users:User[];
 
   /** GET Useres from the server  */
   getUsers (): Observable<User[]> {
-    return this.http.get<User[]>(this.getBaseUrl()+this.userGetUrl)
+    return this.http.get<User[]>(environment.userGetUrl)
       .pipe(
         tap((users: User[]) => this.log('fetched Useres'+JSON.stringify(users))),
         catchError(this.handleError<User[]>('getUsers:', []))
@@ -51,7 +44,7 @@ private users:User[];
   }
 
   getUserById(userId: any): Observable<User> {
-    const url = `${this.getBaseUrl()+this.userByidGetUrl}/${userId}`;
+    const url = `${environment.userByidGetUrl}/${userId}`;
     return this.http.get<User>(url).pipe(
       tap((user: User) => this.log(`fetched User id=${userId}`+JSON.stringify(user))),
       catchError(this.handleError<User>(`getUser id=${userId}`))
@@ -59,14 +52,14 @@ private users:User[];
   }
 
   updateUser (user: User): Observable<any> {
-    return this.http.put(this.getBaseUrl()+this.userByidGetUrl, user, this.httpOptions).pipe(
+    return this.http.put(environment.userByidGetUrl, user, this.httpOptions).pipe(
       tap(_ => this.log(`updated User id=${user.userId}`)),
       catchError(this.handleError<any>('updateUser'))
     );
   }
 
   searchUser (names: String[]): Observable<any> {
-    return this.http.post<User[]>(this.getBaseUrl()+this.searchUserUrl, names, this.httpOptions).pipe(
+    return this.http.post<User[]>(environment.searchUserUrl, names, this.httpOptions).pipe(
       tap((users: User[]) => this.log('fetched Useres'+JSON.stringify(users))),
       catchError(this.handleError<User[]>('getUsers:', []))
     );

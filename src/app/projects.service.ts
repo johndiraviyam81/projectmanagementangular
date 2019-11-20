@@ -5,19 +5,14 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import {Project} from './model/project';
 
+import {environment} from '../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
 
   private Projects:Project[];
- private ProjectAddUrl = 'projects/add';  // URL to web api
-
- private ProjectGetUrl = 'projects/allprojects';
-
- private ProjectByidGetUrl = 'projects/project';
-
- private searchProjectUrl='projects/search';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'})
@@ -26,14 +21,12 @@ export class ProjectsService {
    
 
   constructor(private http: HttpClient) { }
-  getBaseUrl() {  
-    return 'http://localhost:8090/';  
- }
+ 
   /////// Save methods //////////
 
   /** POST: add a new Project to the server */
   addProject (Project: Project): Observable<Project> {
-    return this.http.post<Project>(this.getBaseUrl()+this.ProjectAddUrl, Project, this.httpOptions).pipe(
+    return this.http.post<Project>(environment.ProjectAddUrl, Project, this.httpOptions).pipe(
       tap((newProject: Project) => this.log(`added Project w/ id=${newProject.projectName}`)),
       catchError(this.handleError<Project>('addProject'))
     );
@@ -41,7 +34,7 @@ export class ProjectsService {
 
   /** GET Projectes from the server  */
   getProjects (): Observable<Project[]> {
-    return this.http.get<Project[]>(this.getBaseUrl()+this.ProjectGetUrl)
+    return this.http.get<Project[]>(environment.ProjectGetUrl)
       .pipe(
         tap((Projects: Project[]) => this.log('fetched Projectes'+JSON.stringify(Projects))),
         catchError(this.handleError<Project[]>('getProjects:', []))
@@ -49,7 +42,7 @@ export class ProjectsService {
   }
 
   getProjectById(ProjectId: any): Observable<Project> {
-    const url = `${this.getBaseUrl()+this.ProjectByidGetUrl}/${ProjectId}`;
+    const url = `${environment.ProjectByidGetUrl}/${ProjectId}`;
     return this.http.get<Project>(url).pipe(
       tap((Project: Project) => this.log(`fetched Project id=${ProjectId}`+JSON.stringify(Project))),
       catchError(this.handleError<Project>(`getProject id=${ProjectId}`))
@@ -57,14 +50,14 @@ export class ProjectsService {
   }
 
   updateProject (Project: Project): Observable<any> {
-    return this.http.put(this.getBaseUrl()+this.ProjectByidGetUrl, Project, this.httpOptions).pipe(
+    return this.http.put(environment.ProjectByidGetUrl, Project, this.httpOptions).pipe(
       tap(_ => this.log(`updated Project id=${Project.projectId}`)),
       catchError(this.handleError<any>('updateProject'))
     );
   }
 
   searchProject (names: String): Observable<any> {
-    return this.http.post<Project[]>(this.getBaseUrl()+this.searchProjectUrl, names, this.httpOptions).pipe(
+    return this.http.post<Project[]>(environment.searchProjectUrl, names, this.httpOptions).pipe(
       tap((Projects: Project[]) => this.log('fetched Projectes'+JSON.stringify(Projects))),
       catchError(this.handleError<Project[]>('getProjects:', []))
     );

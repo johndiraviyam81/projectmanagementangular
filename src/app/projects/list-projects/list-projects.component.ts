@@ -2,6 +2,7 @@ import {Component, OnInit,ElementRef, ViewChild} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {Project} from '../../model/project';
 import {ProjectsService} from "../../projects.service";
+import {EditProjectComponent} from "../edit-project/edit-project.component";
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
@@ -17,12 +18,36 @@ export class ListProjectsComponent implements OnInit {
   projects:Project[];
   searchAllProjects:Project[];
 
-  constructor(private projectsService:ProjectsService) { }
+  constructor(private projectsService:ProjectsService,public dialog: MatDialog) { }
 
   ngOnInit() {
     this.getProjects();
   }
+  editProject(projectIdDialog: any): void {
+    console.log("getting project ::"+projectIdDialog);
+    this.getProjectById(projectIdDialog);    
+  }
 
+  getProjectById(projectId : any): void {
+    
+    this.projectsService.getProjectById(projectId).subscribe((newProject:Project) => {
+      console.log('get new projectIdDialog');
+      console.log(JSON.stringify(newProject));
+     
+      const dialogRef = this.dialog.open(EditProjectComponent, {
+        width: '600px',
+        height: '500px',
+        data: newProject
+      }); 
+    
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+         
+      });
+    }, err=>console.log(err));
+     
+   
+  }
   getProjects(): void {
     console.log('fetched project');
     this.projectsService.getProjects().subscribe(projects => {this.projects = projects;

@@ -1,1 +1,54 @@
-<p>edit-project works!</p>
+<h1 mat-dialog-title>Edit project :{{data.projectName}} <button  mat-flat-button color="accent"  (click)="closePop()">Close</button></h1>
+<mat-sidenav-container>
+    <mat-sidenav-content>
+      <form [formGroup]="editProjectForm" (ngSubmit)="updateProject()" novalidate>
+  
+  
+          <!-- First Name -->
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Project Name" formControlName="projectName">
+            <!-- error -->
+            <mat-error *ngIf="errorHandling('projectName', 'required')">
+              You must provide a<strong>project</strong>
+            </mat-error>
+          </mat-form-field>
+  
+          <section class="example-section" >
+                  <mat-form-field>
+                          <input matInput [matDatepicker]="picker1" formControlName="startDate" placeholder="Start date" (dateInput)="addEvent('startDate', $event)" (dateChange)="addEvent('startDate', $event)">
+                          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                          <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                        
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker2" formControlName="endDate" [value]="editDatevalue"  placeholder="End date"  (dateInput)="addEvent('endDate', $event)" (dateChange)="addEvent('endDate', $event)">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2 [startAt]="editDatevalue"></mat-datepicker>
+                          </mat-form-field>
+              </section>
+                                 
+            <section class="example-section" >
+                <label class="example-margin">Priority : </label>
+             <mat-slider matBadge="0" matBadgePosition="before" matBadgeColor="accent" class="example-margin" formControlName="priority" [min]="0" [thumbLabel]="true" [tickInterval]="true" [max]="30" [step]="5"  ></mat-slider>
+         <span class="mat-span" matBadge="30" matBadgePosition="before" matBadgeColor="accent"></span>
+            </section>
+          
+            <mat-form-field class="example-full-width">
+                <input type="text" placeholder="Assignee" aria-label="Assignee" matInput [formControl]="myControl" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete"   [displayWith]="displayFn">
+                  <mat-option *ngFor="let user of filteredOptions | async" [value]="user">
+                    {{user.firstName}}                   </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+                                            
+      
+          <!-- Submit -->
+          <div class="button-wrapper">
+            <button mat-flat-button color="primary">Update Project</button>
+          </div>
+    
+      </form>
+      </mat-sidenav-content>
+  
+    </mat-sidenav-container>
+    

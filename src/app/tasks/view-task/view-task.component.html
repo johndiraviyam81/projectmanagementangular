@@ -1,1 +1,43 @@
-<p>view-task works!</p>
+<mat-sidenav-container>
+    <mat-sidenav-content>
+  
+                <mat-form-field >
+                    <input matInput placeholder="task Name" [formControl]="searchTaskString"  >
+                </mat-form-field>
+  
+  
+        <!-- Submit -->
+        <div class="button-wrapper">
+          <button (click)="searchTask()" mat-flat-button color="primary">Search tasks</button>
+        </div>
+  
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  <div>
+  <table matSort (matSortChange)="sortData($event)">
+      <tr>
+        <th mat-sort-header="taskName">Task Name</th>
+        <th mat-sort-header="startDate">Start Date</th>
+        <th mat-sort-header="endDate">End Date</th>
+        <th mat-sort-header="priority">Priority</th>
+        <th mat-sort-header="projectName">Project Name</th>
+        <th mat-sort-header="userName">Manager Name</th>
+        <th mat-sort-header="parentTaskName">Parent Task Name</th>
+        <th  >Edit</th>
+        <th  >Remove</th>
+      </tr>
+    
+      <tr *ngFor="let taskObj of tasks">
+        <td>{{taskObj.taskName}}</td>
+        <td>{{taskObj.startDate|date: 'mediumDate'}}</td>
+        <td>{{taskObj.endDate|date: 'mediumDate'}}</td>
+        <td>{{taskObj.priority}}</td>
+        <td>{{taskObj.projectName}}</td>
+        <td>{{taskObj.userName}}</td>
+        <td>{{taskObj.parentTaskName}}</td>
+        <td><button mat-raised-button (click)="edittask(taskObj.taskId)">Edit</button></td>
+        <td><button mat-raised-button (click)="removetask(taskObj.taskId)">Remove</button></td>
+      </tr>
+    </table>
+  </div>
+  

@@ -20,6 +20,7 @@ import { ListUsersComponent } from './users/list-users/list-users.component';
 import { EditUserComponent } from './users/edit-user/edit-user.component';
 import { ListProjectsComponent } from './projects/list-projects/list-projects.component';
 import { EditProjectComponent } from './projects/edit-project/edit-project.component';
+import { EditTaskComponent } from './tasks/edit-task/edit-task.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { EditProjectComponent } from './projects/edit-project/edit-project.compo
     ListUsersComponent,
     EditUserComponent,
     ListProjectsComponent,
-    EditProjectComponent 
+    EditProjectComponent,
+    EditTaskComponent 
   ],
   imports: [
     BrowserModule,
@@ -44,6 +46,7 @@ import { EditProjectComponent } from './projects/edit-project/edit-project.compo
     MatNativeDateModule,
     ReactiveFormsModule,
   ],
+  entryComponents: [EditProjectComponent,EditTaskComponent,EditUserComponent],
   providers: [],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

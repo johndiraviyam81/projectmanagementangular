@@ -1,39 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { formatDate,DatePipe  } from '@angular/common';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {User} from '../model/user';
-import {Project} from '../model/project';
-import {Task} from '../model/task';
+import {User} from '../../model/user';
+import {Project} from '../../model/project';
+import {Task} from '../../model/task';
 import {Router} from "@angular/router";
-import {UsersService} from "../users.service";
-import {ProjectsService} from "../projects.service";
-import {TasksService} from "../tasks.service";
+import {UsersService} from "../../users.service";
+import {ProjectsService} from "../../projects.service";
+import {TasksService} from "../../tasks.service";
 
-
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { FormArray,FormGroup, FormControl,  FormBuilder, Validators } from "@angular/forms";
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
 
  
 @Component({
-  selector: 'app-tasks',
-  templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.css']
+  selector: 'app-edit-task',
+  templateUrl: './edit-task.component.html',
+  styleUrls: ['./edit-task.component.css']
 })
-export class TasksComponent implements OnInit {
+export class EditTaskComponent implements OnInit {
   assignedProjectmanager=new User();
   assignedproject=new Project();
   assignedTask=new Task();
+  editTask=new Task();
   task=new Task();
   user=new User();
   getByUser=new User();
   panelOpenState = false;
   userId = new FormControl();
-  
-  addTask: FormGroup;
+  priority:number;
+  editTaskForm: FormGroup;
   userLists: User[];
-  
+  startDatevalue=new Date();
+  editDatevalue=new Date();
   myControl = new FormControl();
   projectsControl = new FormControl();
   parentsControl = new FormControl();
@@ -47,17 +49,74 @@ export class TasksComponent implements OnInit {
   filteredtaskVo: Observable<Task[]>;
   pipe = new DatePipe('en-US'); // Use your own locale
 
-  startDatevalue=new Date();
+  
   color = 'primary';
   mode = 'determinate';
  
 
-  constructor(private usersService:UsersService,private tasksService:TasksService,private projectsService:ProjectsService,private router: Router,public fb: FormBuilder ) {
-    
+  constructor(public dialogRef: MatDialogRef<EditTaskComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Task,private usersService:UsersService,private tasksService:TasksService,private projectsService:ProjectsService,private router: Router,public fb: FormBuilder ) {
+     console.log("retrieved Task::"+data);
+      this.priority=Number.parseInt(data.priority);
+      this.task.taskId=data.taskId;
+      this.getUserById(data.userId);
+      this.getProjectById(data.projectId);
+      this.getParentTaskById(data.parentTaskId);
+       this.editTaskForm = this.fb.group({
+         taskName: ['', [Validators.required]],
+         startDate: new Date(data.startDate),
+         endDate:  new Date(data.endDate),
+         priority: this.priority
+         
+       });
+       this.startDatevalue=new Date(data.startDate);
+       this.editDatevalue=new Date(data.endDate);
+       this.editTaskForm.controls["priority"].setValue(this.priority);
+     
+       this.editTaskForm.patchValue(data);
+       this.editTask=data;
+       
+      console.log(this.editTaskForm.value);
    }
 
+   getUserById(userId : any): void {    
+    if(userId){ 
+    this.usersService.getUserById(userId).subscribe((newUser:User) => {
+      console.log('get new user');
+      console.log(JSON.stringify(newUser));         
+      this.assignedProjectmanager=newUser;
+    }, err=>console.log(err));
+  }
+     
+   
+  }
+
+  getProjectById(projectId : any): void {   
+    if(projectId){ 
+    this.projectsService.getProjectById(projectId).subscribe((projectDto:Project) => {
+      console.log('get new project');
+      console.log(JSON.stringify(projectDto));         
+      this.assignedproject=projectDto;
+    }, err=>console.log(err));
+  }
+     
+   
+  }
+
+  getParentTaskById(parentById : any): void {    
+    if(parentById){
+    this.tasksService.getParentTaskById(parentById).subscribe((taskDTO:Task) => {
+      console.log('get new task');
+      console.log(JSON.stringify(taskDTO));         
+      this.assignedTask=taskDTO;
+    }, err=>console.log(err));
+  }
+     
+   
+  }
+
   ngOnInit() {
-    this.reactiveForm();
+  
     this.getUsers();  
     this.getProjects();
     this.getTasks();
@@ -108,17 +167,7 @@ export class TasksComponent implements OnInit {
 
     return this.parentOptions.filter(option => option.taskName.toLowerCase().indexOf(filterValue) === 0);
   }
-  /* Reactive form */
-  reactiveForm() {
-    this.addTask = this.fb.group({
-      taskName: ['', [Validators.required]],
-      startDate: new Date(),
-      endDate:  new Date(),
-      priority: 20
-      
-    })
-   
-  }
+ 
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     if(type=="startDate")
@@ -132,7 +181,7 @@ export class TasksComponent implements OnInit {
   }
     /* Handle form errors in Angular 8 */
     public errorHandling = (control: string, error: string) => {
-      return this.addTask.controls[control].hasError(error);
+      return this.editTaskForm.controls[control].hasError(error);
     }
     
    
@@ -141,6 +190,10 @@ export class TasksComponent implements OnInit {
     this.usersService.getUsers().subscribe(users => {
       this.userLists = users;      
     this.options = users;  
+    if(this.assignedProjectmanager) {
+    this.myControl.patchValue(this.assignedProjectmanager);
+    this.myControl.setValue(this.assignedProjectmanager);
+    }
     });
     
   }
@@ -148,7 +201,11 @@ export class TasksComponent implements OnInit {
   getProjects(): void {
     console.log('fetched project');
     this.projectsService.getProjects().subscribe(projects => {this.projects = projects;
-      this.projectOptions=projects;       
+      this.projectOptions=projects;  
+      if(this.assignedproject) {
+      this.projectsControl.patchValue(this.assignedproject);
+      this.projectsControl.setValue(this.assignedproject);   
+      } 
     });
     
   }
@@ -156,23 +213,27 @@ export class TasksComponent implements OnInit {
   getTasks(): void {
     console.log('fetched task');
     this.tasksService.gettasks().subscribe(tasks => {this.tasks = tasks;
-      this.parentOptions=tasks;       
+      this.parentOptions=tasks; 
+      if(this.assignedTask) {
+      this.parentsControl.patchValue(this.assignedTask);
+      this.parentsControl.setValue(this.assignedTask);     
+      }  
     });
     
   }
 
-  submitTask() {
-    console.log(this.addTask.value);
+  updateTask() {
+    console.log(this.editTaskForm.value);
     console.log(this.myControl.value);
     console.log(this.projectsControl.value);
     console.log(this.parentsControl.value);
     this.assignedProjectmanager=  this.myControl.value;
     this.assignedproject=  this.projectsControl.value;
     this.assignedTask=  this.parentsControl.value;
-    this.task.taskName=this.addTask.value.taskName;
-    this.task.startDate=this.pipe.transform(this.addTask.value.startDate,"yyyy-MM-dd");
-    this.task.endDate=this.pipe.transform(this.addTask.value.endDate,"yyyy-MM-dd");
-    this.task.priority=this.addTask.value.priority;
+    this.task.taskName=this.editTaskForm.value.taskName;
+    this.task.startDate=this.pipe.transform(this.editTaskForm.value.startDate,"yyyy-MM-dd");
+    this.task.endDate=this.pipe.transform(this.editTaskForm.value.endDate,"yyyy-MM-dd");
+    this.task.priority=this.editTaskForm.value.priority;
     this.task.userId=this.assignedProjectmanager.userId;
     this.task.userName=this.assignedProjectmanager.firstName;
     this.task.projectId=this.assignedproject.projectId;
@@ -185,7 +246,7 @@ export class TasksComponent implements OnInit {
     
     console.log(this.task);
     
-    this.tasksService.addtask(this.task).subscribe(task => {
+    this.tasksService.updatetask(this.task).subscribe(task => {
       console.log(JSON.stringify(task));
       
       this.router.navigateByUrl('/projects', { skipLocationChange: true }).then(() => {
@@ -193,7 +254,14 @@ export class TasksComponent implements OnInit {
     });
 
       });
+
+      this.dialogRef.close();
      
   }
-
+  closePop(): void {
+    this.dialogRef.close();
+  }
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

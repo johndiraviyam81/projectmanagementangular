@@ -69,5 +69,8 @@ modifyUserForm() {
   onNoClick(): void {
     this.dialogRef.close();
   }
+  closePop(): void {
+    this.dialogRef.close();
+  }
 
 }

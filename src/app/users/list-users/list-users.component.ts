@@ -150,8 +150,7 @@ export class ListUsersComponent implements OnInit{
         case 'firstName': return compare(a.firstName, b.firstName, isAsc);
         case 'lastName': return compare(a.lastName, b.lastName, isAsc);
         case 'employeeId': return compare(a.employeeId, b.employeeId, isAsc);
-        case 'projectId': return compare(a.projectId, b.projectId, isAsc);
-        case 'taskId': return compare(a.taskId, b.taskId, isAsc);
+     
         default: return 0;
       }
     });

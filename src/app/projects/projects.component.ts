@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { formatDate,DatePipe  } from '@angular/common';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {User} from '../model/user';
@@ -31,7 +32,7 @@ export class ProjectsComponent implements OnInit {
   myControl = new FormControl();
   options: User[] ;
   filteredOptions: Observable<User[]>;
-
+  pipe = new DatePipe('en-US'); // Use your own locale
 
   startDatevalue=new Date();
   color = 'primary';
@@ -68,11 +69,12 @@ export class ProjectsComponent implements OnInit {
       projectName: ['', [Validators.required]],
       startDate: new Date(),
       endDate:  new Date(),
-      priority: 15
+      priority: 20
       
     })
    
   }
+
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     if(type=="startDate")
   { 
@@ -104,16 +106,15 @@ export class ProjectsComponent implements OnInit {
     console.log(this.addProject.value);
     this.assignedProjectmanager=  this.myControl.value;
     this.project.projectName=this.addProject.value.projectName;
-    this.project.startDate=this.addProject.value.startDate;
-    this.project.endDate=this.addProject.value.endDate;
+    this.project.startDate=this.pipe.transform(this.addProject.value.startDate,"yyyy-MM-dd");
+    this.project.endDate=this.pipe.transform(this.addProject.value.endDate,"yyyy-MM-dd");
     this.project.priority=this.addProject.value.priority;
     this.project.userId=this.assignedProjectmanager.userId;
     this.project.userName=this.assignedProjectmanager.firstName;
-    
+    this.project.projectId="";
     console.log(this.myControl.value);
     
     console.log(this.project);
-/*
     this.projectsService.addProject(this.project).subscribe(project => {
       console.log(JSON.stringify(project));
 
@@ -121,7 +122,7 @@ export class ProjectsComponent implements OnInit {
         this.router.navigate(['/projects']);
     });
 
-      });*/
+      });
      
   }
 

@@ -1,6 +1,7 @@
+<h1 mat-dialog-title>Edit task :{{data.taskName}} <button  mat-flat-button color="accent"  (click)="closePop()">Close</button></h1>
 <mat-sidenav-container>
     <mat-sidenav-content>
-      <form [formGroup]="addTask" (ngSubmit)="submitTask()" novalidate>
+      <form [formGroup]="editTaskForm" (ngSubmit)="updateTask()" novalidate>
   
   
           <!-- First Name -->
@@ -20,9 +21,9 @@
                         </mat-form-field>
                         
                         <mat-form-field>
-                            <input matInput [matDatepicker]="picker2" formControlName="endDate" [value]="startDate"  placeholder="End date"  (dateInput)="addEvent('endDate', $event)" (dateChange)="addEvent('endDate', $event)">
+                            <input matInput [matDatepicker]="picker2" formControlName="endDate" [value]="editDatevalue"  placeholder="End date"  (dateInput)="addEvent('endDate', $event)" (dateChange)="addEvent('endDate', $event)">
                             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                            <mat-datepicker #picker2 [startAt]="startDatevalue"></mat-datepicker>
+                            <mat-datepicker #picker2 [startAt]="editDatevalue"></mat-datepicker>
                           </mat-form-field>
               </section>
                                  
@@ -40,7 +41,8 @@
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
-          <mat-span>;;;</mat-span>
+            </section>
+            <section class="example-section" >
               <mat-form-field class="example-full-width">
                 <input type="text" placeholder="Projects" aria-label="Projects" matInput [formControl]="projectsControl" [matAutocomplete]="autoProject">
                 <mat-autocomplete #autoProject="matAutocomplete" [displayWith]="displayProjectFn">
@@ -49,7 +51,8 @@
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
-              <mat-span>;;;   </mat-span>
+            </section>
+            <section class="example-section" >
               <mat-form-field class="example-full-width">
                 <input type="text" placeholder="Parent Tasks" aria-label="ParentTasks" matInput [formControl]="parentsControl" [matAutocomplete]="autoTasks">
                 <mat-autocomplete #autoTasks="matAutocomplete" [displayWith]="displayTaskFn">
@@ -61,12 +64,11 @@
             </section>
           <!-- Submit -->
           <div class="button-wrapper">
-            <button mat-flat-button color="primary">Add Task</button>
-          </div>
-    
+            <button mat-raised-button color="primary">Update Task</button>            
+          </div>    
       </form>
+      
       </mat-sidenav-content>
-  
-    </mat-sidenav-container>
+      </mat-sidenav-container>
     
-    <app-view-task></app-view-task>
+    

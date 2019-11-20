@@ -27,12 +27,12 @@
     
       <tr *ngFor="let projectObj of projects">
         <td>{{projectObj.projectName}}</td>
-        <td>{{projectObj.startDate}}</td>
-        <td>{{projectObj.endDate}}</td>
+        <td>{{projectObj.startDate|date: 'mediumDate'}}</td>
+        <td>{{projectObj.endDate|date: 'mediumDate'}}</td>
         <td>{{projectObj.priority}}</td>
         <td>{{projectObj.userName}}</td>
-        <td><button mat-raised-button (click)="editUser(projectObj.projectId)">Edit</button></td>
-        <td><button mat-raised-button (click)="removeUser(projectObj.projectId)">Remove</button></td>
+        <td><button mat-raised-button (click)="editProject(projectObj.projectId)">Edit</button></td>
+        <td><button mat-raised-button (click)="removeProject(projectObj.projectId)">Remove</button></td>
       </tr>
     </table>
   </div>
