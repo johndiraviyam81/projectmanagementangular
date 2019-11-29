@@ -7,7 +7,9 @@
   import {map, startWith} from 'rxjs/operators';
   import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
   import { FormArray,FormGroup, FormControl,  FormBuilder, Validators } from "@angular/forms";
-  
+  import {MatSnackBar} from '@angular/material/snack-bar';
+  import {Router} from "@angular/router";
+
   @Component({
     selector: 'app-view-task',
     templateUrl: './view-task.component.html',
@@ -21,7 +23,7 @@
     tasks:Task[];
     searchAlltasks:Task[];
   
-    constructor(private tasksService:TasksService,public dialog: MatDialog) { }
+    constructor(private _snackBar: MatSnackBar,private tasksService:TasksService,public dialog: MatDialog,private router: Router) { }
   
     ngOnInit() {
       this.gettasks();
@@ -51,6 +53,26 @@
        
      
     }
+
+    removetask(taskId : any): void {
+      
+      
+        console.log("deleting task ::"+taskId);
+        this.tasksService.deleteTask(taskId).subscribe(deleteRecord => {
+      console.log('delete message :: '+deleteRecord.message);
+      
+        this._snackBar.open(deleteRecord.message, "!!!!", {
+          duration: 2000,
+        });
+        this.router.navigateByUrl('/projects', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/tasks']);
+      });
+       
+    }, err=>console.log(err));    
+  }
+       
+     
+    
     gettasks(): void {
       console.log('fetched task');
       this.tasksService.gettasks().subscribe(tasks => {this.tasks = tasks;

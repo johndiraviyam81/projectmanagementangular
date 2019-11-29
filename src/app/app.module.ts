@@ -22,6 +22,7 @@ import { ListProjectsComponent } from './projects/list-projects/list-projects.co
 import { EditProjectComponent } from './projects/edit-project/edit-project.component';
 import { EditTaskComponent } from './tasks/edit-task/edit-task.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +35,8 @@ import { EditTaskComponent } from './tasks/edit-task/edit-task.component';
     EditUserComponent,
     ListProjectsComponent,
     EditProjectComponent,
-    EditTaskComponent 
+    EditTaskComponent,
+     
   ],
   imports: [
     BrowserModule,

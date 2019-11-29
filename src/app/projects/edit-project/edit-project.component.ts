@@ -128,9 +128,11 @@ export class EditProjectComponent implements OnInit {
         this.project.startDate=this.pipe.transform(this.editProjectForm.value.startDate,"yyyy-MM-dd");
         this.project.endDate=this.pipe.transform(this.editProjectForm.value.endDate,"yyyy-MM-dd");
         this.project.priority=this.editProjectForm.value.priority;
+        if(this.assignedProjectmanager!=null)
+        {
         this.project.userId=this.assignedProjectmanager.userId;
         this.project.userName=this.assignedProjectmanager.firstName;
-        
+        }
         console.log(this.myControl.value);
         
         console.log(this.project);

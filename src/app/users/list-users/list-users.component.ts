@@ -10,8 +10,9 @@ import {map, startWith} from 'rxjs/operators';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { FormArray,FormGroup, FormControl,  FormBuilder, Validators } from "@angular/forms";
 import  {EditUserComponent} from '../edit-user/edit-user.component';
-
-
+import {DeleteRecord} from '../../model/deleterecord';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-list-users',
@@ -45,12 +46,11 @@ export class ListUsersComponent implements OnInit{
   
   
    
-  constructor(private usersService:UsersService,public fb: FormBuilder,public dialog: MatDialog) {
+  constructor(private _snackBar: MatSnackBar,private router: Router,private usersService:UsersService,public fb: FormBuilder,public dialog: MatDialog) {
 
     this.filtereduserFiNames = this.userFiNameCtrl.valueChanges.pipe(
       startWith(null),
       map((userFiName: string | null) => userFiName ? this._filter(userFiName) : this.alluserFiNames.slice()));
-
    }
   
    add(event: MatChipInputEvent): void {
@@ -158,6 +158,20 @@ export class ListUsersComponent implements OnInit{
   editUser(userIdDialog: any): void {
     console.log("getting user ::"+userIdDialog);
     this.getUserById(userIdDialog);    
+  }
+
+  removeUser(userIdDialog: any): void {
+    console.log("deleting user ::"+userIdDialog);
+    this.usersService.deleteUser(userIdDialog).subscribe(deleteRecord => {
+      console.log('user message :: '+deleteRecord.message);
+      
+        this._snackBar.open(deleteRecord.message, "!!!!", {
+          duration: 2000,
+        });
+        this.router.navigateByUrl('/tasks', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/users']);
+      });
+    }, err=>console.log(err));    
   }
   
  

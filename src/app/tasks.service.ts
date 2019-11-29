@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import {Task} from './model/task';
 import {environment} from '../environments/environment';
+import {DeleteRecord} from './model/deleterecord';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,15 @@ export class TasksService {
       catchError(this.handleError<Task>(`gettask id=${taskId}`))
     );
   }
+
+  deleteTask (taskId: any):  Observable<DeleteRecord> {
+    const url = `${environment.taskByidGetUrl}/${taskId}`;
+
+  return this.http.delete<DeleteRecord>(url, this.httpOptions).pipe(
+    tap(_ => this.log(`deleted task id=${taskId}`)),
+    catchError(this.handleError<any>('deleteTask'))
+  );
+}
 
   getParentTaskById(parentId: any): Observable<Task> {
     const url = `${environment.taskByParentIDGetUrl}/${parentId}`;

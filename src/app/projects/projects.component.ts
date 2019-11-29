@@ -109,8 +109,11 @@ export class ProjectsComponent implements OnInit {
     this.project.startDate=this.pipe.transform(this.addProject.value.startDate,"yyyy-MM-dd");
     this.project.endDate=this.pipe.transform(this.addProject.value.endDate,"yyyy-MM-dd");
     this.project.priority=this.addProject.value.priority;
+    if(this.assignedProjectmanager!=null)
+    {
     this.project.userId=this.assignedProjectmanager.userId;
     this.project.userName=this.assignedProjectmanager.firstName;
+    }
     this.project.projectId="";
     console.log(this.myControl.value);
     

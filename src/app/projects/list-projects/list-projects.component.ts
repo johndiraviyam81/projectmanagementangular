@@ -7,6 +7,8 @@ import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { FormArray,FormGroup, FormControl,  FormBuilder, Validators } from "@angular/forms";
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-list-projects',
@@ -18,7 +20,7 @@ export class ListProjectsComponent implements OnInit {
   projects:Project[];
   searchAllProjects:Project[];
 
-  constructor(private projectsService:ProjectsService,public dialog: MatDialog) { }
+  constructor(private _snackBar: MatSnackBar,private projectsService:ProjectsService,public dialog: MatDialog,private router: Router) { }
 
   ngOnInit() {
     this.getProjects();
@@ -48,6 +50,26 @@ export class ListProjectsComponent implements OnInit {
      
    
   }
+
+  removeProject(projectId : any): void {
+    console.log("deleting project ::"+projectId);
+    this.projectsService.deleteProject(projectId).subscribe(deleteRecord => {
+      console.log('delete message :: '+deleteRecord.message);
+      
+        this._snackBar.open(deleteRecord.message, "!!!!", {
+          duration: 2000,
+        });
+        this.router.navigateByUrl('/tasks', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/projects']);
+      });
+          
+    }, err=>{
+      console.log('delete message :: '+err.message);
+      console.log("project error"+err)}
+      );
+
+  }
+
   getProjects(): void {
     console.log('fetched project');
     this.projectsService.getProjects().subscribe(projects => {this.projects = projects;

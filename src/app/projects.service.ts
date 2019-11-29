@@ -6,6 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import {Project} from './model/project';
 
 import {environment} from '../environments/environment';
+import {DeleteRecord} from './model/deleterecord';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,7 @@ export class ProjectsService {
       );
   }
 
+
   getProjectById(ProjectId: any): Observable<Project> {
     const url = `${environment.ProjectByidGetUrl}/${ProjectId}`;
     return this.http.get<Project>(url).pipe(
@@ -48,6 +50,15 @@ export class ProjectsService {
       catchError(this.handleError<Project>(`getProject id=${ProjectId}`))
     );
   }
+
+  deleteProject (ProjectId: any):  Observable<DeleteRecord> {
+    const url = `${environment.ProjectByidGetUrl}/${ProjectId}`;
+
+  return this.http.delete<DeleteRecord>(url, this.httpOptions).pipe(
+    tap(_ => this.log(`deleted Project id=${ProjectId}`)),
+    catchError(this.handleError<any>('deleteProject'))
+  );
+}
 
   updateProject (Project: Project): Observable<any> {
     return this.http.put(environment.ProjectByidGetUrl, Project, this.httpOptions).pipe(

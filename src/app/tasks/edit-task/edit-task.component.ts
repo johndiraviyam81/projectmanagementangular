@@ -234,10 +234,16 @@ export class EditTaskComponent implements OnInit {
     this.task.startDate=this.pipe.transform(this.editTaskForm.value.startDate,"yyyy-MM-dd");
     this.task.endDate=this.pipe.transform(this.editTaskForm.value.endDate,"yyyy-MM-dd");
     this.task.priority=this.editTaskForm.value.priority;
+    if(this.assignedProjectmanager!=null)
+    {
     this.task.userId=this.assignedProjectmanager.userId;
     this.task.userName=this.assignedProjectmanager.firstName;
+    }
+    if(this.assignedproject!=null)
+    {
     this.task.projectId=this.assignedproject.projectId;
     this.task.projectName=this.assignedproject.projectName;
+    }
     if(this.assignedTask!=null && this.assignedTask.taskId!=null)
     {
     this.task.parentTaskId=this.assignedTask.taskId;

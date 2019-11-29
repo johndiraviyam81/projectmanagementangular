@@ -6,6 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { User } from './model/user';
 import {environment} from '../environments/environment';
+import {DeleteRecord} from './model/deleterecord';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,15 @@ private users:User[];
     return this.http.get<User>(url).pipe(
       tap((user: User) => this.log(`fetched User id=${userId}`+JSON.stringify(user))),
       catchError(this.handleError<User>(`getUser id=${userId}`))
+    );
+  }
+
+  deleteUser (userId: any):  Observable<DeleteRecord> {
+      const url = `${environment.userByidGetUrl}/${userId}`;
+
+    return this.http.delete<DeleteRecord>(url, this.httpOptions).pipe(
+      tap(_ => this.log(`deleted User id=${userId}`)),
+      catchError(this.handleError<User>('deleteUser'))
     );
   }
 
