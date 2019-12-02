@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
 import {UsersService} from "../users.service";
 import {ProjectsService} from "../projects.service";
 import {TasksService} from "../tasks.service";
-
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 import { FormArray,FormGroup, FormControl,  FormBuilder, Validators } from "@angular/forms";
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
@@ -52,7 +52,7 @@ export class TasksComponent implements OnInit {
   mode = 'determinate';
  
 
-  constructor(private usersService:UsersService,private tasksService:TasksService,private projectsService:ProjectsService,private router: Router,public fb: FormBuilder ) {
+  constructor(private _snackBar: MatSnackBar,private usersService:UsersService,private tasksService:TasksService,private projectsService:ProjectsService,private router: Router,public fb: FormBuilder ) {
     
    }
 
@@ -112,9 +112,9 @@ export class TasksComponent implements OnInit {
   reactiveForm() {
     this.addTask = this.fb.group({
       taskName: ['', [Validators.required]],
-      startDate: new Date(),
-      endDate:  new Date(),
-      priority: 20
+      startDate: [new Date(), [Validators.required]],
+      endDate:  [new Date(), [Validators.required]],
+      priority: [20, [Validators.required]]
       
     })
    
@@ -166,6 +166,7 @@ export class TasksComponent implements OnInit {
     console.log(this.myControl.value);
     console.log(this.projectsControl.value);
     console.log(this.parentsControl.value);
+    if(this.addTask.value.taskName && this.addTask.value.endDate) {
     this.assignedProjectmanager=  this.myControl.value;
     this.assignedproject=  this.projectsControl.value;
     this.assignedTask=  this.parentsControl.value;
@@ -193,12 +194,16 @@ export class TasksComponent implements OnInit {
     
     this.tasksService.addtask(this.task).subscribe(task => {
       console.log(JSON.stringify(task));
-      
+      this._snackBar.open(task.message, "!!!!", {
+        duration: 2000,
+      });
       this.router.navigateByUrl('/projects', { skipLocationChange: true }).then(() => {
         this.router.navigate(['/tasks']);
     });
 
       });
+
+    }
      
   }
 

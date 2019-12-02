@@ -14,7 +14,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { FormArray,FormGroup, FormControl,  FormBuilder, Validators } from "@angular/forms";
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
-
+import {MatSnackBar} from '@angular/material/snack-bar';
  
 @Component({
   selector: 'app-edit-task',
@@ -55,7 +55,7 @@ export class EditTaskComponent implements OnInit {
  
 
   constructor(public dialogRef: MatDialogRef<EditTaskComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Task,private usersService:UsersService,private tasksService:TasksService,private projectsService:ProjectsService,private router: Router,public fb: FormBuilder ) {
+    @Inject(MAT_DIALOG_DATA) public data: Task,private _snackBar: MatSnackBar,private usersService:UsersService,private tasksService:TasksService,private projectsService:ProjectsService,private router: Router,public fb: FormBuilder ) {
      console.log("retrieved Task::"+data);
       this.priority=Number.parseInt(data.priority);
       this.task.taskId=data.taskId;
@@ -254,7 +254,9 @@ export class EditTaskComponent implements OnInit {
     
     this.tasksService.updatetask(this.task).subscribe(task => {
       console.log(JSON.stringify(task));
-      
+      this._snackBar.open(task.message, "!!!!", {
+        duration: 2000,
+      });
       this.router.navigateByUrl('/projects', { skipLocationChange: true }).then(() => {
         this.router.navigate(['/tasks']);
     });

@@ -11,6 +11,7 @@ import {Project} from '../../model/project';
 import {ProjectsService} from "../../projects.service";
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-project',
@@ -39,7 +40,7 @@ export class EditProjectComponent implements OnInit {
   priority:number;
 
   constructor( public dialogRef: MatDialogRef<EditProjectComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Project,private projectsService:ProjectsService ,private usersService:UsersService,public fb: FormBuilder,private router: Router) {
+    @Inject(MAT_DIALOG_DATA) public data: Project,private _snackBar: MatSnackBar,private projectsService:ProjectsService ,private usersService:UsersService,public fb: FormBuilder,private router: Router) {
       this.priority=Number.parseInt(data.priority);
      this.getUserById(data.userId);
       this.editProjectForm = this.fb.group({
@@ -138,7 +139,9 @@ export class EditProjectComponent implements OnInit {
         console.log(this.project);
         this.projectsService.updateProject(this.project).subscribe(project => {
           console.log(JSON.stringify(project));
-    
+          this._snackBar.open(project.message, "!!!!", {
+            duration: 2000,
+          });
           this.router.navigateByUrl('/tasks', { skipLocationChange: true }).then(() => {
             this.router.navigate(['/projects']);
         });

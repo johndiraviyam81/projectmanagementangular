@@ -5,22 +5,35 @@
 <form [formGroup]="editUserForm" (ngSubmit)="modifyUserForm()" novalidate>
         <!-- First Name -->
         <input  type="hidden" formControlName="userId"  >
-        <mat-form-field class="example-full-width">
-          <input matInput placeholder="First Name" formControlName="firstName"  >
+       
+       
+          <!-- First Name -->
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="First Name" formControlName="firstName">
+            <!-- error -->
+            <mat-error *ngIf="errorHandling('firstName', 'required')">
+              You must provide a <strong>first name</strong>
+            </mat-error>
+          </mat-form-field>
+        
+          <!-- Last Name -->
+          <mat-form-field class="example-full-width">
+              <input matInput placeholder="Last Name" formControlName="lastName">
+              <!-- error -->
+              <mat-error *ngIf="errorHandling('lastName', 'required')">
+                You must provide a <strong>last name</strong>
+              </mat-error>
+            </mat-form-field>
           
-        </mat-form-field>
-
-        <!-- Last Name -->
-        <mat-form-field class="example-full-width">
-            <input matInput placeholder="Last Name" formControlName="lastName"  >
-            
-          </mat-form-field>
-
-          <!-- Employee ID -->
-        <mat-form-field class="example-full-width">
-            <input matInput placeholder="Employee ID" formControlName="employeeId" >
-            
-          </mat-form-field>
+            <!-- Employee ID -->
+          <mat-form-field class="example-full-width">
+              <input matInput placeholder="Employee Id" formControlName="employeeId">
+              <!-- error -->
+              <mat-error *ngIf="errorHandling('employeeId', 'required')">
+                You must provide a <strong>Employee ID</strong>
+              </mat-error>
+            </mat-form-field>
+         
   
         <!-- Submit -->
         <div class="button-wrapper">

@@ -69,6 +69,7 @@ private users:User[];
   }
 
   searchUser (names: String[]): Observable<any> {
+    this.log('Passed Useres'+JSON.stringify(names));
     return this.http.post<User[]>(environment.searchUserUrl, names, this.httpOptions).pipe(
       tap((users: User[]) => this.log('fetched Useres'+JSON.stringify(users))),
       catchError(this.handleError<User[]>('getUsers:', []))

@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import {User} from '../model/user';
 import {UsersService} from "../users.service";
 import {Router} from "@angular/router";
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-users',
@@ -20,7 +21,7 @@ user=new User();
   addUserForm: FormGroup;
  
 
-  constructor(private usersService:UsersService,public fb: FormBuilder,private router: Router) {}
+  constructor(private _snackBar: MatSnackBar,private usersService:UsersService,public fb: FormBuilder,private router: Router) {}
 
   ngOnInit(): void {
     this.reactiveForm()
@@ -31,7 +32,7 @@ user=new User();
     this.addUserForm = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      employeeId: [''],
+      employeeId: ['', [Validators.required]],
       
     })
    
@@ -52,7 +53,9 @@ user=new User();
     console.log(JSON.stringify(this.user));
     this.usersService.addUser(this.user).subscribe(user => {
       console.log(JSON.stringify(user));
-
+      this._snackBar.open(user.message, "!!!!", {
+        duration: 2000,
+      });
       this.router.navigateByUrl('/tasks', { skipLocationChange: true }).then(() => {
         this.router.navigate(['/users']);
     });

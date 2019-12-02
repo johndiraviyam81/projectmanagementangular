@@ -11,7 +11,7 @@ import {ProjectsService} from "../projects.service";
 import { FormArray,FormGroup, FormControl,  FormBuilder, Validators } from "@angular/forms";
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
-
+import {MatSnackBar} from '@angular/material/snack-bar';
  
 @Component({
   selector: 'app-projects',
@@ -39,7 +39,7 @@ export class ProjectsComponent implements OnInit {
   mode = 'determinate';
  
 
-  constructor(private usersService:UsersService,private projectsService:ProjectsService,private router: Router,public fb: FormBuilder ) {
+  constructor(private _snackBar: MatSnackBar,private usersService:UsersService,private projectsService:ProjectsService,private router: Router,public fb: FormBuilder ) {
     
    }
 
@@ -120,7 +120,9 @@ export class ProjectsComponent implements OnInit {
     console.log(this.project);
     this.projectsService.addProject(this.project).subscribe(project => {
       console.log(JSON.stringify(project));
-
+      this._snackBar.open(project.message, "!!!!", {
+        duration: 2000,
+      });
       this.router.navigateByUrl('/tasks', { skipLocationChange: true }).then(() => {
         this.router.navigate(['/projects']);
     });

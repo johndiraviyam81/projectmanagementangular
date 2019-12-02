@@ -4,6 +4,7 @@ import { User } from '../../model/user';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import {UsersService} from "../../users.service";
 import {Router} from "@angular/router";
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-user',
@@ -21,13 +22,13 @@ export class EditUserComponent {
 
   constructor(
     public dialogRef: MatDialogRef<EditUserComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: User,private usersService:UsersService,public fb: FormBuilder,private router: Router) {
+    @Inject(MAT_DIALOG_DATA) public data: User,private _snackBar: MatSnackBar,private usersService:UsersService,public fb: FormBuilder,private router: Router) {
       
       this.editUserForm = this.fb.group({
         userId: [''],
         firstName: ['', [Validators.required]],
         lastName: ['', [Validators.required]],
-        employeeId: ['']        
+        employeeId: ['', [Validators.required]]        
       });
       this.editUserForm.patchValue(data);
     }
@@ -53,7 +54,9 @@ modifyUserForm() {
   console.log(JSON.stringify(this.user));
   this.usersService.updateUser(this.user).subscribe(user => {
     console.log(JSON.stringify(user));
- 
+    this._snackBar.open(user.message, "!!!!", {
+      duration: 2000,
+    });
     //this.router.navigate(["/users", {relativeTo: this.router, skipLocationChange: true}]);
     this.router.navigateByUrl('/tasks', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/users']);
