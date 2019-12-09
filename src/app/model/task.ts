@@ -11,6 +11,8 @@ export class Task {
             public	startDate?: string,
             public	endDate?: string,
             public	priority?: string,
+            public	status?: string,
+            public	setParentTask?: string,
             public	message?: string
       
     ) {}

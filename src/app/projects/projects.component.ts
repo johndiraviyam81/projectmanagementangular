@@ -3,6 +3,7 @@ import { formatDate,DatePipe  } from '@angular/common';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {User} from '../model/user';
+import {ProjectAppConstants,ENUMERATION_TYPES, Enumeration} from '../model/projectappconstants';
 import {Project} from '../model/project';
 import {Router} from "@angular/router";
 import {UsersService} from "../users.service";
@@ -28,13 +29,15 @@ export class ProjectsComponent implements OnInit {
   
   addProject: FormGroup;
   userLists: User[];
-  
+  projectConstant:ProjectAppConstants;
   myControl = new FormControl();
   options: User[] ;
   filteredOptions: Observable<User[]>;
   pipe = new DatePipe('en-US'); // Use your own locale
-
+ 
   startDatevalue=new Date();
+  endDatevalue=new Date();
+  
   color = 'primary';
   mode = 'determinate';
  
@@ -52,6 +55,8 @@ export class ProjectsComponent implements OnInit {
       map(value => typeof value === 'string' ? value : value.name),
       map(name => name ? this._filter(name) : this.options)
     );
+     
+   
   }
 
   displayFn(user?: User): string | undefined {
@@ -67,14 +72,33 @@ export class ProjectsComponent implements OnInit {
   reactiveForm() {
     this.addProject = this.fb.group({
       projectName: ['', [Validators.required]],
-      startDate: new Date(),
-      endDate:  new Date(),
-      priority: 20
+      startDate: {value:null,disabled: true},
+      endDate:  {value:null,disabled: true},
+      disabled:'',
+      priority: 0
       
     })
    
   }
-
+  enableDates()
+  {
+    this.endDatevalue.setDate(this.startDatevalue.getDate()+1);
+if(this.addProject.controls["startDate"].disabled)
+{
+    this.addProject.controls["startDate"].enable();
+        this.addProject.controls["endDate"].enable();
+        this.addProject.controls["startDate"].setValue(new Date());
+        this.addProject.controls["endDate"].setValue(this.endDatevalue);
+        this.startDatevalue= this.endDatevalue ;
+}
+else
+{
+  this.addProject.controls["startDate"].disable();
+        this.addProject.controls["endDate"].disable();
+        this.addProject.controls["startDate"].setValue(null);
+        this.addProject.controls["endDate"].setValue(null);
+}
+  }
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     if(type=="startDate")
   { 
@@ -109,6 +133,8 @@ export class ProjectsComponent implements OnInit {
     this.project.startDate=this.pipe.transform(this.addProject.value.startDate,"yyyy-MM-dd");
     this.project.endDate=this.pipe.transform(this.addProject.value.endDate,"yyyy-MM-dd");
     this.project.priority=this.addProject.value.priority;
+   
+          
     if(this.assignedProjectmanager!=null)
     {
     this.project.userId=this.assignedProjectmanager.userId;

@@ -7,7 +7,9 @@ export class Project {
       public	startDate?: string,
       public	endDate?: string,
       public	priority?: string,
+      public	noOfTasks?: string,
       public	message?: string
-      
+
+    
     ) {}
   }

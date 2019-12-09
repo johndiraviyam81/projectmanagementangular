@@ -36,22 +36,37 @@
 
   </mat-sidenav-content>
 </mat-sidenav-container>
-<div>
-<table matSort (matSortChange)="sortData($event)">
-    <tr>
-      <th mat-sort-header="firstName">First Name</th>
-      <th mat-sort-header="lastName">Last Name</th>
-      <th mat-sort-header="employeeId">Employee ID</th>
-      <th  >Edit</th>
-      <th  >Remove</th>
-    </tr>
-  
-    <tr *ngFor="let user of users">
-      <td>{{user.firstName}}</td>
-      <td>{{user.lastName}}</td>
-      <td>{{user.employeeId}}</td>
-      <td><button mat-raised-button (click)="editUser(user.userId)">Edit</button></td>
-      <td><button mat-raised-button (click)="removeUser(user.userId)">Remove</button></td>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+      
+    <!-- ID Column -->
+    <ng-container matColumnDef="firstName">
+      <th class="longLength" mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
+      <td class="longLength" mat-cell *matCellDef="let row"> {{row.firstName}} </td>
+    </ng-container>
+
+    <!-- Progress Column -->
+    <ng-container matColumnDef="lastName">
+      <th class="shortLength" mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
+      <td class="shortLength" mat-cell *matCellDef="let row"> {{row.lastName}} </td>
+    </ng-container>
+    
+    <!-- Name Column -->
+    <ng-container matColumnDef="employeeId">
+      <th class="shortLength" mat-header-cell *matHeaderCellDef mat-sort-header> Employee Id </th>
+      <td class="shortLength" mat-cell *matCellDef="let row"> {{row.employeeId}} </td>
+    </ng-container>
+     
+           
+            <ng-container matColumnDef="userId">
+                <th class="longLength" mat-header-cell *matHeaderCellDef mat-sort-header> Actions </th>
+                <td class="longLength" mat-cell *matCellDef="let row" > <button mat-raised-button (click)="editUser(row.userId)">Edit </button> /<button mat-raised-button (click)="removeUser(row.userId)">Remove</button> </td>
+              </ng-container>
+            <tr class="defaultHeader" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr  mat-row *matRowDef="let row; columns: displayedColumns;">
     </tr>
   </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
 </div>

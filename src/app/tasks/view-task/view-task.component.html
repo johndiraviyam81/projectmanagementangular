@@ -2,7 +2,7 @@
     <mat-sidenav-content>
   
                 <mat-form-field >
-                    <input matInput placeholder="task Name" [formControl]="searchTaskString"  >
+                    <input matInput placeholder="Project Name" [formControl]="searchTaskString"  >
                 </mat-form-field>
   
   
@@ -13,31 +13,57 @@
   
     </mat-sidenav-content>
   </mat-sidenav-container>
-  <div>
-  <table matSort (matSortChange)="sortData($event)">
-      <tr>
-        <th mat-sort-header="taskName">Task Name</th>
-        <th mat-sort-header="startDate">Start Date</th>
-        <th mat-sort-header="endDate">End Date</th>
-        <th mat-sort-header="priority">Priority</th>
-        <th mat-sort-header="projectName">Project Name</th>
-        <th mat-sort-header="userName">Manager Name</th>
-        <th mat-sort-header="parentTaskName">Parent Task Name</th>
-        <th  >Edit</th>
-        <th  >Remove</th>
-      </tr>
-    
-      <tr *ngFor="let taskObj of tasks">
-        <td>{{taskObj.taskName}}</td>
-        <td>{{taskObj.startDate|date: 'mediumDate'}}</td>
-        <td>{{taskObj.endDate|date: 'mediumDate'}}</td>
-        <td>{{taskObj.priority}}</td>
-        <td>{{taskObj.projectName}}</td>
-        <td>{{taskObj.userName}}</td>
-        <td>{{taskObj.parentTaskName}}</td>
-        <td><button mat-raised-button (click)="edittask(taskObj.taskId)">Edit</button></td>
-        <td><button mat-raised-button (click)="removetask(taskObj.taskId)">Remove</button></td>
+  
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+        
+      <!-- ID Column -->
+      <ng-container matColumnDef="taskName">
+        <th class="longLength" mat-header-cell *matHeaderCellDef mat-sort-header> Task Name </th>
+        <td class="longLength" mat-cell *matCellDef="let row"> {{row.taskName}} </td>
+      </ng-container>
+     
+  
+      <!-- Progress Column -->
+      <ng-container matColumnDef="startDate">
+        <th class="shortLength" mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>
+        <td class="shortLength" mat-cell *matCellDef="let row"> {{row.startDate|date: 'mediumDate'}} </td>
+      </ng-container>
+      
+      <!-- Name Column -->
+      <ng-container matColumnDef="endDate">
+        <th class="shortLength" mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>
+        <td class="shortLength" mat-cell *matCellDef="let row"> {{row.endDate|date: 'mediumDate'}} </td>
+      </ng-container>
+        <!-- Name Column -->
+        <ng-container matColumnDef="priority">
+            <th class="shortLength"  mat-header-cell *matHeaderCellDef mat-sort-header> Priority </th>
+            <td class="shortLength" mat-cell *matCellDef="let row"> {{row.priority}} </td>
+          </ng-container>
+      <!-- Color Column -->
+      ['taskName','startDate', 'endDate','priority', 'status','projectName','parentTaskName','taskId'];
+      <ng-container matColumnDef="status">
+        <th  class="shortLength" mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <td class="shortLength" mat-cell *matCellDef="let row" > {{row.status}} </td>
+      </ng-container>
+      <ng-container matColumnDef="projectName">
+          <th class="longLength" mat-header-cell *matHeaderCellDef mat-sort-header> Project Name </th>
+          <td class="longLength" mat-cell *matCellDef="let row" > {{row.projectName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="parentTaskName">
+            <th class="longLength" mat-header-cell *matHeaderCellDef mat-sort-header> Parent Task Name </th>
+            <td class="longLength" mat-cell *matCellDef="let row" > {{row.parentTaskName}} </td>
+          </ng-container>
+             
+              <ng-container matColumnDef="taskId">
+                  <th class="longLength" mat-header-cell *matHeaderCellDef mat-sort-header> Actions </th>
+                  <td class="longLength" mat-cell *matCellDef="let row" > <button mat-raised-button (click)="edittask(row.taskId)">Edit</button> /<button mat-raised-button (click)="endtask(row.taskId)">End Task</button> </td>
+                </ng-container>
+              <tr class="defaultHeader" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
       </tr>
     </table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
   </div>
   

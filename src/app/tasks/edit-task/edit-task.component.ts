@@ -104,11 +104,12 @@ export class EditTaskComponent implements OnInit {
   }
 
   getParentTaskById(parentById : any): void {    
+    console.log(' getParentTaskById::'+parentById);
     if(parentById){
-    this.tasksService.getParentTaskById(parentById).subscribe((taskDTO:Task) => {
-      console.log('get new task');
-      console.log(JSON.stringify(taskDTO));         
-      this.assignedTask=taskDTO;
+    this.tasksService.gettaskById(parentById).subscribe((gettheNewTask:Task) => {
+      console.log('Parent task for setting at edit dialog::: ');
+      console.log(JSON.stringify(gettheNewTask));         
+      this.assignedTask=gettheNewTask;
     }, err=>console.log(err));
   }
      
@@ -119,7 +120,7 @@ export class EditTaskComponent implements OnInit {
   
     this.getUsers();  
     this.getProjects();
-    this.getTasks();
+    this.getParentTasks();
     this.filteredOptions = this.myControl.valueChanges
     .pipe(
       startWith(''),
@@ -210,9 +211,9 @@ export class EditTaskComponent implements OnInit {
     
   }
 
-  getTasks(): void {
-    console.log('fetched task');
-    this.tasksService.gettasks().subscribe(tasks => {this.tasks = tasks;
+  getParentTasks(): void {
+    console.log('fetched parent task');
+    this.tasksService.getParenttasks().subscribe(tasks => {this.tasks = tasks;
       this.parentOptions=tasks; 
       if(this.assignedTask) {
       this.parentsControl.patchValue(this.assignedTask);
@@ -234,6 +235,7 @@ export class EditTaskComponent implements OnInit {
     this.task.startDate=this.pipe.transform(this.editTaskForm.value.startDate,"yyyy-MM-dd");
     this.task.endDate=this.pipe.transform(this.editTaskForm.value.endDate,"yyyy-MM-dd");
     this.task.priority=this.editTaskForm.value.priority;
+    this.task.status=this.editTask.status;
     if(this.assignedProjectmanager!=null)
     {
     this.task.userId=this.assignedProjectmanager.userId;
@@ -258,7 +260,7 @@ export class EditTaskComponent implements OnInit {
         duration: 2000,
       });
       this.router.navigateByUrl('/projects', { skipLocationChange: true }).then(() => {
-        this.router.navigate(['/tasks']);
+        this.router.navigate(['/viewtasks']);
     });
 
       });

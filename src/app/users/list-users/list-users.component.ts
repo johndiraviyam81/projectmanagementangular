@@ -13,6 +13,9 @@ import  {EditUserComponent} from '../edit-user/edit-user.component';
 import {DeleteRecord} from '../../model/deleterecord';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from "@angular/router";
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-list-users',
@@ -38,6 +41,14 @@ export class ListUsersComponent implements OnInit{
   
   @ViewChild('userFiNameInput', {static: false}) userFiNameInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
+
+  displayedColumns: string[] = ['firstName','lastName', 'employeeId','userId'];
+
+  dataSource: MatTableDataSource<User>;
+
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   myUserSearchForm: FormGroup;
   
@@ -108,13 +119,27 @@ export class ListUsersComponent implements OnInit{
       this.searchAllUser.forEach(user=>{ 
         this.alluserFiNames.push(user.firstName)
       });
+      this.dataSource = new MatTableDataSource(this.users);   
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;  
     });
     
+  }
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
   searchUser():void{
     console.log('fetched user');
     this.users=this.searchAllUser;
-    this.usersService.searchUser(this.userFiNames).subscribe(users => this.users = users);
+    this.usersService.searchUser(this.userFiNames).subscribe(users =>{ this.users = users
+      this.dataSource = new MatTableDataSource(this.users);   
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;  
+    });
   }
   getUserById(userId : any): void {
     

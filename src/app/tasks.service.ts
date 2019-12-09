@@ -42,6 +42,15 @@ export class TasksService {
       );
   }
 
+   /** GET Parent taskes from the server  */
+   getParenttasks (): Observable<Task[]> {
+    return this.http.get<Task[]>(environment.parentTaskAllUrl)
+      .pipe(
+        tap((tasks: Task[]) => this.log('fetched taskes'+JSON.stringify(tasks))),
+        catchError(this.handleError<Task[]>('gettasks:', []))
+      );
+  }
+
   gettaskById(taskId: any): Observable<Task> {
     const url = `${environment.taskByidGetUrl}/${taskId}`;
     return this.http.get<Task>(url).pipe(

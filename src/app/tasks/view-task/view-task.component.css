@@ -1,0 +1,30 @@
+table {
+  width: 1300px;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    
+  }
+  th {
+    font-size:14px !important;
+    font-weight: bold !important;
+    color:white !important;
+  }
+  
+  td.longLength, th.longLength {
+    width: 160px;
+    margin:10px;
+  }
+
+  td.shortLength, th.shortLength {
+    width: 60px;
+    margin:10px;
+  }
+  .expiryRow{
+    background: aliceblue;
+  }
+.defaultHeader{
+  background: #1976d2;
+  
+}

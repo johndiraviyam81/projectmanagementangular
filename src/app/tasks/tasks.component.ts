@@ -14,7 +14,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import { FormArray,FormGroup, FormControl,  FormBuilder, Validators } from "@angular/forms";
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
-
+import {ENUMERATION_TYPES} from '../model/projectappconstants';
  
 @Component({
   selector: 'app-tasks',
@@ -60,28 +60,39 @@ export class TasksComponent implements OnInit {
     this.reactiveForm();
     this.getUsers();  
     this.getProjects();
-    this.getTasks();
+    this.getParentTasks();
+   if(this.addTask.controls["startDate"].enabled)
+   {
+    this.reactiveControlChange();
+   }
+  }
+
+  reactiveControlChange()
+  {
+    console.log("reactiveControlChange:: in ::");
+    if(this.myControl.enabled)
+    {
     this.filteredOptions = this.myControl.valueChanges
     .pipe(
       startWith(''),
-      map(value => typeof value === 'string' ? value : value.name),
-      map(name => name ? this._filter(name) : this.options)
+      map(value => typeof value === 'string'? value : value),
+      map(value => name ? this._filter(name) : this.options)
     );
     this.filteredprojectVo = this.projectsControl.valueChanges
     .pipe(
       startWith(''),
-      map(value => typeof value === 'string' ? value : value.name),
-      map(name => name ? this._projectFilter(name) : this.projectOptions)
+      map(value => typeof value === 'string' ? value : value),
+      map(value => name ? this._projectFilter(name) : this.projectOptions)
     );
 
     this.filteredtaskVo = this.parentsControl.valueChanges
     .pipe(
       startWith(''),
-      map(value => typeof value === 'string' ? value : value.name),
-      map(name => name ? this._taskFilter(name) : this.parentOptions)
+      map(value => typeof value === 'string' ? value : value),
+      map(value => name ? this._taskFilter(name) : this.parentOptions)
     );
+    }
   }
-
   displayFn(user?: User): string | undefined {
     return user ? user.firstName : undefined;
   }
@@ -114,10 +125,32 @@ export class TasksComponent implements OnInit {
       taskName: ['', [Validators.required]],
       startDate: [new Date(), [Validators.required]],
       endDate:  [new Date(), [Validators.required]],
-      priority: [20, [Validators.required]]
+      priority: [0, [Validators.required]],
+      setParentTask:''
       
     })
    
+  }
+
+  enableParentTask(){
+    if(this.addTask.controls["startDate"].enabled)
+    {
+    this.addTask.controls["startDate"].disable();
+    this.addTask.controls["endDate"].disable();
+    this.addTask.controls["priority"].disable();
+    this.myControl.disable();
+    this.projectsControl.disable();
+   this.parentsControl.disable();
+    }
+    else
+    {
+      this.addTask.controls["startDate"].enable();
+    this.addTask.controls["endDate"].enable();
+    this.addTask.controls["priority"].enable();
+    this.myControl.enable();
+    this.projectsControl.enable();
+   this.parentsControl.enable();
+    }
   }
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
@@ -153,10 +186,10 @@ export class TasksComponent implements OnInit {
     
   }
 
-  getTasks(): void {
-    console.log('fetched task');
-    this.tasksService.gettasks().subscribe(tasks => {this.tasks = tasks;
-      this.parentOptions=tasks;       
+  getParentTasks(): void {
+     this.tasksService.getParenttasks().subscribe(tasks => {this.tasks = tasks;
+      this.parentOptions=tasks;    
+      console.log('parent tasks::'+this.parentOptions.toString);   
     });
     
   }
@@ -166,30 +199,35 @@ export class TasksComponent implements OnInit {
     console.log(this.myControl.value);
     console.log(this.projectsControl.value);
     console.log(this.parentsControl.value);
-    if(this.addTask.value.taskName && this.addTask.value.endDate) {
-    this.assignedProjectmanager=  this.myControl.value;
-    this.assignedproject=  this.projectsControl.value;
-    this.assignedTask=  this.parentsControl.value;
-    this.task.taskName=this.addTask.value.taskName;
-    this.task.startDate=this.pipe.transform(this.addTask.value.startDate,"yyyy-MM-dd");
-    this.task.endDate=this.pipe.transform(this.addTask.value.endDate,"yyyy-MM-dd");
-    this.task.priority=this.addTask.value.priority;
-    if(this.assignedProjectmanager!=null)
-    {
-    this.task.userId=this.assignedProjectmanager.userId;
-    this.task.userName=this.assignedProjectmanager.firstName;
-    }
-    if(this.assignedproject!=null)
-    {
-    this.task.projectId=this.assignedproject.projectId;
-    this.task.projectName=this.assignedproject.projectName;
-    }
-    if(this.assignedTask!=null && this.assignedTask.taskId!=null)
-    {
-    this.task.parentTaskId=this.assignedTask.taskId;
-    this.task.parentTaskName=this.assignedTask.taskName;
-    }
     
+    if(this.addTask.value.taskName ) {
+      this.task.taskName=this.addTask.value.taskName;
+      this.task.setParentTask=(this.addTask.value.setParentTask)?"1":"0";
+      if(this.addTask.value.endDate)
+      {
+          this.assignedProjectmanager=  this.myControl.value;
+          this.assignedproject=  this.projectsControl.value;
+          this.assignedTask=  this.parentsControl.value;    
+          this.task.startDate=this.pipe.transform(this.addTask.value.startDate,"yyyy-MM-dd");
+          this.task.endDate=this.pipe.transform(this.addTask.value.endDate,"yyyy-MM-dd");
+          this.task.priority=this.addTask.value.priority;
+          this.task.status=ENUMERATION_TYPES[1];
+          if(this.assignedProjectmanager!=null)
+          {
+          this.task.userId=this.assignedProjectmanager.userId;
+          this.task.userName=this.assignedProjectmanager.firstName;
+          }
+          if(this.assignedproject!=null)
+          {
+          this.task.projectId=this.assignedproject.projectId;
+          this.task.projectName=this.assignedproject.projectName;
+          }
+          if(this.assignedTask!=null && this.assignedTask.taskId!=null)
+          {
+          this.task.parentTaskId=this.assignedTask.taskId;
+          this.task.parentTaskName=this.assignedTask.taskName;
+          }
+  }
     console.log(this.task);
     
     this.tasksService.addtask(this.task).subscribe(task => {
@@ -198,7 +236,7 @@ export class TasksComponent implements OnInit {
         duration: 2000,
       });
       this.router.navigateByUrl('/projects', { skipLocationChange: true }).then(() => {
-        this.router.navigate(['/tasks']);
+        this.router.navigate(['/viewtasks']);
     });
 
       });

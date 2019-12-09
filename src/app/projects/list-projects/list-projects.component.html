@@ -1,4 +1,4 @@
-<mat-sidenav-container>
+<!-- mat-sidenav-container>
     <mat-sidenav-content>
   
                 <mat-form-field >
@@ -6,34 +6,66 @@
                 </mat-form-field>
   
   
-        <!-- Submit -->
+        
         <div class="button-wrapper">
           <button (click)="searchProject()" mat-flat-button color="primary">Search Projects</button>
         </div>
   
     </mat-sidenav-content>
-  </mat-sidenav-container>
-  <div>
-  <table matSort (matSortChange)="sortData($event)">
-      <tr>
-        <th mat-sort-header="projectName">Project Name</th>
-        <th mat-sort-header="startDate">Start Date</th>
-        <th mat-sort-header="endDate">End Date</th>
-        <th mat-sort-header="priority">Priority</th>
-        <th mat-sort-header="userName">Manager Name</th>
-        <th  >Edit</th>
-        <th  >Remove</th>
-      </tr>
-    
-      <tr *ngFor="let projectObj of projects">
-        <td>{{projectObj.projectName}}</td>
-        <td>{{projectObj.startDate|date: 'mediumDate'}}</td>
-        <td>{{projectObj.endDate|date: 'mediumDate'}}</td>
-        <td>{{projectObj.priority}}</td>
-        <td>{{projectObj.userName}}</td>
-        <td><button mat-raised-button (click)="editProject(projectObj.projectId)">Edit</button></td>
-        <td><button mat-raised-button (click)="removeProject(projectObj.projectId)">Remove</button></td>
-      </tr>
-    </table>
-  </div>
+  </mat-sidenav-container-->
+ 
   
+  <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort>
+          
+        <!-- ID Column -->
+        <ng-container matColumnDef="projectName">
+          <th class="longLength" mat-header-cell *matHeaderCellDef mat-sort-header> Project Name </th>
+          <td class="longLength" mat-cell *matCellDef="let row"> {{row.projectName}} </td>
+        </ng-container>
+    
+        <!-- Progress Column -->
+        <ng-container matColumnDef="startDate">
+          <th class="shortLength" mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>
+          <td class="shortLength" mat-cell *matCellDef="let row"> {{row.startDate|date: 'mediumDate'}} </td>
+        </ng-container>
+        
+        <!-- Name Column -->
+        <ng-container matColumnDef="endDate">
+          <th class="shortLength" mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>
+          <td class="shortLength" mat-cell *matCellDef="let row"> {{row.endDate|date: 'mediumDate'}} </td>
+        </ng-container>
+          <!-- Name Column -->
+          <ng-container matColumnDef="priority">
+              <th class="shortLength"  mat-header-cell *matHeaderCellDef mat-sort-header> Priority </th>
+              <td class="shortLength" mat-cell *matCellDef="let row"> {{row.priority}} </td>
+            </ng-container>
+        <!-- Color Column -->
+        <ng-container matColumnDef="userName">
+          <th  class="shortLength" mat-header-cell *matHeaderCellDef mat-sort-header> User Name </th>
+          <td class="shortLength" mat-cell *matCellDef="let row" > {{row.userName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="noOfTasks">
+            <th class="shortLength" mat-header-cell *matHeaderCellDef mat-sort-header> No Of Tasks </th>
+            <td class="shortLength" mat-cell *matCellDef="let row" > {{row.noOfTasks}} </td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+              <th class="shortLength" mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+              <td class="shortLength" mat-cell *matCellDef="let row" > {{row.status}} </td>
+            </ng-container>
+               
+                <ng-container matColumnDef="projectId">
+                    <th class="longLength" mat-header-cell *matHeaderCellDef mat-sort-header> Actions </th>
+                    <td class="longLength" mat-cell *matCellDef="let row" > <button mat-raised-button (click)="editProject(row.projectId)">Update</button> /<button mat-raised-button (click)="suspendProject(row.projectId)">Suspend</button> </td>
+                  </ng-container>
+                <tr class="defaultHeader" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+      </table>
+    
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+    </div>

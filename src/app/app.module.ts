@@ -47,6 +47,7 @@ import { EditTaskComponent } from './tasks/edit-task/edit-task.component';
     ExtendedMaterialModule,
     MatNativeDateModule,
     ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'})
   ],
   entryComponents: [EditProjectComponent,EditTaskComponent,EditUserComponent],
   providers: [],
