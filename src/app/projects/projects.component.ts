@@ -116,7 +116,7 @@ else
     
    
   getUsers(): void {
-    console.log('fetched user');
+    
     this.usersService.getUsers().subscribe(users => {
       this.userLists = users;      
     this.options = users;  
@@ -127,7 +127,7 @@ else
 
 
   submitProject() {
-    console.log(this.addProject.value);
+   
     this.assignedProjectmanager=  this.myControl.value;
     this.project.projectName=this.addProject.value.projectName;
     this.project.startDate=this.pipe.transform(this.addProject.value.startDate,"yyyy-MM-dd");
@@ -141,11 +141,9 @@ else
     this.project.userName=this.assignedProjectmanager.firstName;
     }
     this.project.projectId="";
-    console.log(this.myControl.value);
-    
-    console.log(this.project);
+  
     this.projectsService.addProject(this.project).subscribe(project => {
-      console.log(JSON.stringify(project));
+   
       this._snackBar.open(project.message, "!!!!", {
         duration: 2000,
       });

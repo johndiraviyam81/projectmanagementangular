@@ -56,7 +56,7 @@ export class EditTaskComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<EditTaskComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Task,private _snackBar: MatSnackBar,private usersService:UsersService,private tasksService:TasksService,private projectsService:ProjectsService,private router: Router,public fb: FormBuilder ) {
-     console.log("retrieved Task::"+data);
+  
       this.priority=Number.parseInt(data.priority);
       this.task.taskId=data.taskId;
       this.getUserById(data.userId);
@@ -75,15 +75,13 @@ export class EditTaskComponent implements OnInit {
      
        this.editTaskForm.patchValue(data);
        this.editTask=data;
-       
-      console.log(this.editTaskForm.value);
+      
    }
 
    getUserById(userId : any): void {    
     if(userId){ 
     this.usersService.getUserById(userId).subscribe((newUser:User) => {
-      console.log('get new user');
-      console.log(JSON.stringify(newUser));         
+           
       this.assignedProjectmanager=newUser;
     }, err=>console.log(err));
   }
@@ -94,8 +92,7 @@ export class EditTaskComponent implements OnInit {
   getProjectById(projectId : any): void {   
     if(projectId){ 
     this.projectsService.getProjectById(projectId).subscribe((projectDto:Project) => {
-      console.log('get new project');
-      console.log(JSON.stringify(projectDto));         
+         
       this.assignedproject=projectDto;
     }, err=>console.log(err));
   }
@@ -104,11 +101,10 @@ export class EditTaskComponent implements OnInit {
   }
 
   getParentTaskById(parentById : any): void {    
-    console.log(' getParentTaskById::'+parentById);
+     
     if(parentById){
     this.tasksService.gettaskById(parentById).subscribe((gettheNewTask:Task) => {
-      console.log('Parent task for setting at edit dialog::: ');
-      console.log(JSON.stringify(gettheNewTask));         
+        
       this.assignedTask=gettheNewTask;
     }, err=>console.log(err));
   }
@@ -187,7 +183,7 @@ export class EditTaskComponent implements OnInit {
     
    
   getUsers(): void {
-    console.log('fetched user');
+   
     this.usersService.getUsers().subscribe(users => {
       this.userLists = users;      
     this.options = users;  
@@ -200,7 +196,7 @@ export class EditTaskComponent implements OnInit {
   }
   
   getProjects(): void {
-    console.log('fetched project');
+   
     this.projectsService.getProjects().subscribe(projects => {this.projects = projects;
       this.projectOptions=projects;  
       if(this.assignedproject) {
@@ -212,7 +208,7 @@ export class EditTaskComponent implements OnInit {
   }
 
   getParentTasks(): void {
-    console.log('fetched parent task');
+
     this.tasksService.getParenttasks().subscribe(tasks => {this.tasks = tasks;
       this.parentOptions=tasks; 
       if(this.assignedTask) {
@@ -224,10 +220,7 @@ export class EditTaskComponent implements OnInit {
   }
 
   updateTask() {
-    console.log(this.editTaskForm.value);
-    console.log(this.myControl.value);
-    console.log(this.projectsControl.value);
-    console.log(this.parentsControl.value);
+
     this.assignedProjectmanager=  this.myControl.value;
     this.assignedproject=  this.projectsControl.value;
     this.assignedTask=  this.parentsControl.value;
@@ -252,10 +245,10 @@ export class EditTaskComponent implements OnInit {
     this.task.parentTaskName=this.assignedTask.taskName;
     }
     
-    console.log(this.task);
+
     
     this.tasksService.updatetask(this.task).subscribe(task => {
-      console.log(JSON.stringify(task));
+
       this._snackBar.open(task.message, "!!!!", {
         duration: 2000,
       });

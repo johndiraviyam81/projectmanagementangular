@@ -49,10 +49,9 @@ user=new User();
     this.user.firstName=this.addUserForm.value.firstName;
     this.user.lastName=this.addUserForm.value.lastName;
     this.user.employeeId=this.addUserForm.value.employeeId;
-    console.log(this.addUserForm.value);
-    console.log(JSON.stringify(this.user));
+  
     this.usersService.addUser(this.user).subscribe(user => {
-      console.log(JSON.stringify(user));
+       
       this._snackBar.open(user.message, "!!!!", {
         duration: 2000,
       });

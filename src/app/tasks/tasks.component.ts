@@ -69,7 +69,7 @@ export class TasksComponent implements OnInit {
 
   reactiveControlChange()
   {
-    console.log("reactiveControlChange:: in ::");
+   
     if(this.myControl.enabled)
     {
     this.filteredOptions = this.myControl.valueChanges
@@ -170,7 +170,7 @@ export class TasksComponent implements OnInit {
     
    
   getUsers(): void {
-    console.log('fetched user');
+ 
     this.usersService.getUsers().subscribe(users => {
       this.userLists = users;      
     this.options = users;  
@@ -179,7 +179,7 @@ export class TasksComponent implements OnInit {
   }
   
   getProjects(): void {
-    console.log('fetched project');
+     
     this.projectsService.getProjects().subscribe(projects => {this.projects = projects;
       this.projectOptions=projects;       
     });
@@ -189,16 +189,13 @@ export class TasksComponent implements OnInit {
   getParentTasks(): void {
      this.tasksService.getParenttasks().subscribe(tasks => {this.tasks = tasks;
       this.parentOptions=tasks;    
-      console.log('parent tasks::'+this.parentOptions.toString);   
+        
     });
     
   }
 
   submitTask() {
-    console.log(this.addTask.value);
-    console.log(this.myControl.value);
-    console.log(this.projectsControl.value);
-    console.log(this.parentsControl.value);
+
     
     if(this.addTask.value.taskName ) {
       this.task.taskName=this.addTask.value.taskName;
@@ -228,10 +225,10 @@ export class TasksComponent implements OnInit {
           this.task.parentTaskName=this.assignedTask.taskName;
           }
   }
-    console.log(this.task);
+   
     
     this.tasksService.addtask(this.task).subscribe(task => {
-      console.log(JSON.stringify(task));
+     
       this._snackBar.open(task.message, "!!!!", {
         duration: 2000,
       });

@@ -43,15 +43,13 @@
       this.gettasks();
     }
     edittask(taskIdDialog: any): void {
-      console.log("getting task ::"+taskIdDialog);
-      this.gettaskById(taskIdDialog);    
+           this.gettaskById(taskIdDialog);    
     }
   
     gettaskById(taskId : any): void {
       
       this.tasksService.gettaskById(taskId).subscribe((newtask:Task) => {
-        console.log('eidting the task for updating it:::');
-        console.log(JSON.stringify(newtask));
+              
        
         const dialogRef = this.dialog.open(EditTaskComponent, {
           width: '600px',
@@ -71,12 +69,11 @@
     endtask(taskId : any): void {
       
       this.tasksService.gettaskById(taskId).subscribe((updatetask:Task) => {
-        console.log('get new taskIdDialog');
-        console.log(JSON.stringify(updatetask));
+  
         updatetask.endDate=this.pipe.transform(new Date(),"yyyy-MM-dd");
         updatetask.status=ENUMERATION_TYPES[2];
         this.tasksService.updatetask(updatetask).subscribe(task => {
-          console.log(JSON.stringify(task));
+      
           this._snackBar.open(task.message, "!!!!", {
             duration: 2000,
           });
@@ -91,7 +88,7 @@
      
     
     gettasks(): void {
-      console.log('fetched task');
+    
       this.tasksService.gettasks().subscribe(tasks => {this.tasks = tasks;
         this.searchAlltasks=tasks;     
         this.dataSource = new MatTableDataSource(this.tasks);   
@@ -109,8 +106,7 @@
       }
     }
     searchTask():void{
-      console.log('search tasks::'+this.searchTaskString.value);
-     
+          
       this.tasksService.searchtask(this.searchTaskString.value).subscribe(tasks => {this.tasks = tasks;
         this.searchAlltasks=tasks;     
         this.dataSource = new MatTableDataSource(this.tasks);   
@@ -120,7 +116,7 @@
     }
   
     sortData(sort: Sort) {
-      console.log('sort usersort::'+sort);
+    
       const data = this.tasks.slice();
       if (!sort.active || sort.direction === '') {
         this.tasks = data;

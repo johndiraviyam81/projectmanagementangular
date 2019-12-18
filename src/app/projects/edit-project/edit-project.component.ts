@@ -57,7 +57,6 @@ export class EditProjectComponent implements OnInit {
       this.editProjectForm.patchValue(data);
       this.editProject=data;
       
-     console.log(this.editProjectForm.value);
       }
 
 
@@ -83,11 +82,11 @@ export class EditProjectComponent implements OnInit {
       }
 
       getUsers(): void {
-        console.log('fetched user');
+        
         this.usersService.getUsers().subscribe(users => {
           this.userLists = users;      
         this.options = users;  
-        console.log("userName::"+this.editProject.userName);  
+       
         this.myControl.patchValue(this.assignedProjectmanager);
         this.myControl.setValue(this.assignedProjectmanager);
         });
@@ -113,15 +112,14 @@ export class EditProjectComponent implements OnInit {
 
       getUserById(userId : any): void {    
         this.usersService.getUserById(userId).subscribe((newUser:User) => {
-          console.log('get new user');
-          console.log(JSON.stringify(newUser));         
+                  
           this.assignedProjectmanager=newUser;
         }, err=>console.log(err));
          
        
       }
       updateProject() {
-        console.log(this.editProjectForm.value);
+         
         this.assignedProjectmanager=  this.myControl.value;
         this.project.projectId=this.editProject.projectId;
         this.project.projectName=this.editProjectForm.value.projectId;
@@ -135,11 +133,10 @@ export class EditProjectComponent implements OnInit {
         this.project.userId=this.assignedProjectmanager.userId;
         this.project.userName=this.assignedProjectmanager.firstName;
         }
-        console.log(this.myControl.value);
-        
-        console.log(this.project);
+       
+  
         this.projectsService.updateProject(this.project).subscribe(project => {
-          console.log(JSON.stringify(project));
+          
           this._snackBar.open(project.message, "!!!!", {
             duration: 2000,
           });

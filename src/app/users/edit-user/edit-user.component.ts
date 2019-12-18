@@ -50,10 +50,9 @@ modifyUserForm() {
   this.user.firstName=this.editUserForm.value.firstName;
   this.user.lastName=this.editUserForm.value.lastName;
   this.user.employeeId=this.editUserForm.value.employeeId;
-  console.log(this.editUserForm.value);
-  console.log(JSON.stringify(this.user));
+ 
   this.usersService.updateUser(this.user).subscribe(user => {
-    console.log(JSON.stringify(user));
+
     this._snackBar.open(user.message, "!!!!", {
       duration: 2000,
     });

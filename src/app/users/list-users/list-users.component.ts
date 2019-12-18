@@ -113,7 +113,7 @@ export class ListUsersComponent implements OnInit{
 
   
   getUsers(): void {
-    console.log('fetched user');
+   
     this.usersService.getUsers().subscribe(users => {this.users = users;
       this.searchAllUser=users;
       this.searchAllUser.forEach(user=>{ 
@@ -133,7 +133,7 @@ export class ListUsersComponent implements OnInit{
     }
   }
   searchUser():void{
-    console.log('fetched user');
+ 
     this.users=this.searchAllUser;
     this.usersService.searchUser(this.userFiNames).subscribe(users =>{ this.users = users
       this.dataSource = new MatTableDataSource(this.users);   
@@ -144,8 +144,7 @@ export class ListUsersComponent implements OnInit{
   getUserById(userId : any): void {
     
     this.usersService.getUserById(userId).subscribe((newUser:User) => {
-      console.log('get new user');
-      console.log(JSON.stringify(newUser));
+
      
       const dialogRef = this.dialog.open(EditUserComponent, {
         width: '400px',
@@ -162,7 +161,7 @@ export class ListUsersComponent implements OnInit{
    
   }
   sortData(sort: Sort) {
-    console.log('sort usersort::'+sort);
+  
     const data = this.users.slice();
     if (!sort.active || sort.direction === '') {
       this.users = data;
@@ -181,14 +180,14 @@ export class ListUsersComponent implements OnInit{
     });
   }
   editUser(userIdDialog: any): void {
-    console.log("getting user ::"+userIdDialog);
+    
     this.getUserById(userIdDialog);    
   }
 
   removeUser(userIdDialog: any): void {
-    console.log("deleting user ::"+userIdDialog);
+  
     this.usersService.deleteUser(userIdDialog).subscribe(deleteRecord => {
-      console.log('user message :: '+deleteRecord.message);
+   
       
         this._snackBar.open(deleteRecord.message, "!!!!", {
           duration: 2000,

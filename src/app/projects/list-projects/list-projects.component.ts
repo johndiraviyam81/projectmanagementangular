@@ -43,16 +43,14 @@ export class ListProjectsComponent implements OnInit {
     this.getProjects();    
   }
   editProject(projectIdDialog: any): void {
-    console.log("getting project ::"+projectIdDialog);
+   
     this.getProjectById(projectIdDialog);    
   }
 
   getProjectById(projectId : any): void {
     
     this.projectsService.getProjectById(projectId).subscribe((newProject:Project) => {
-      console.log('get new projectIdDialog');
-      console.log(JSON.stringify(newProject));
-     
+         
       const dialogRef = this.dialog.open(EditProjectComponent, {
         width: '600px',
         height: '500px',
@@ -69,9 +67,9 @@ export class ListProjectsComponent implements OnInit {
   }
 
   suspendProject(projectId : any): void {
-    console.log("suspending project ::"+projectId);
+    
     this.projectsService.getProjectById(projectId).subscribe(getRecord => {
-      console.log('getRecord message :: '+getRecord.message);
+     
       getRecord.endDate=this.pipe.transform(new Date(),"yyyy-MM-dd");
       
       this.projectsService.updateProject(getRecord).subscribe(updateRecord => {
@@ -82,19 +80,21 @@ export class ListProjectsComponent implements OnInit {
           this.router.navigate(['/projects']);
       });
     }, err=>{
-      console.log('delete message :: '+err.message);
-      console.log("project error"+err)}
+     // console.log('delete message :: '+err.message);
+    //  console.log("project error"+err)
+    }
       );
           
     }, err=>{
-      console.log('delete message :: '+err.message);
-      console.log("project error"+err)}
+     // console.log('delete message :: '+err.message);
+      //console.log("project error"+err)
+    }
       );
 
   }
 
   getProjects(): void {
-    console.log('fetched project');
+   
     this.projectsService.getProjects().subscribe(projects => {this.projects = projects;
       this.searchAllProjects=projects;  
       this.dataSource = new MatTableDataSource(this.projects);   
@@ -111,7 +111,7 @@ export class ListProjectsComponent implements OnInit {
     }
   }
   searchProject():void{
-    console.log('search projects::'+this.searchProjectString.value);
+    
    
     this.projectsService.searchProject(this.searchProjectString.value).subscribe(projects => {this.projects = projects;
       this.searchAllProjects=projects;       
